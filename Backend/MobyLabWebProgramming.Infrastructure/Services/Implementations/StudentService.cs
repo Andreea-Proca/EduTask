@@ -28,21 +28,31 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
             _mailService = mailService;
         }
 
-        public async Task<ServiceResponse<Student>> GetStudent(Guid id, CancellationToken cancellationToken = default)
+        public async Task<ServiceResponse<StudentDTO>> GetStudent(Guid id, CancellationToken cancellationToken = default)
         {
-            var result = await _repository.GetAsync(new StudentSpec(id), cancellationToken);
+            var result = await _repository.GetAsync(new StudentProjectionSpec(id), cancellationToken);
 
             return result != null ?
-                ServiceResponse<Student>.ForSuccess(result) :
-                ServiceResponse<Student>.FromError(CommonErrors.StudentNotFound);
+                ServiceResponse<StudentDTO>.ForSuccess(result) :
+                ServiceResponse<StudentDTO>.FromError(CommonErrors.StudentNotFound);
         }
-
+        /*
         public async Task<ServiceResponse<List<Student>>> GetStudents(CancellationToken cancellationToken = default)
         {
             var result = await _repository.ListAsync<Student>(new StudentProjectionSpec(), cancellationToken);
 
             return ServiceResponse<List<Student>>.ForSuccess(result);
+        } */
+
+        public async Task<ServiceResponse<PagedResponse<StudentDTO>>> GetStudentsPage(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)
+        {
+            var result = await _repository.PageAsync(pagination, new StudentProjectionSpec(pagination.Search), cancellationToken); // Use the specification and pagination API to get only some entities from the database.
+
+            return ServiceResponse<PagedResponse<StudentDTO>>.ForSuccess(result);
         }
+
+        public async Task<ServiceResponse<int>> GetStudentCount(CancellationToken cancellationToken = default) =>
+    ServiceResponse<int>.ForSuccess(await _repository.GetCountAsync<Student>(cancellationToken)); // Get the count of all user entities in the database.
 
         public async Task<ServiceResponse> AddStudent(StudentAddDTO student, UserDTO? requestingUser, CancellationToken cancellationToken = default)
         {
@@ -73,16 +83,6 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
 
         public async Task<ServiceResponse> UpdateStudent(StudentUpdateDTO student, UserDTO? requestingUser, CancellationToken cancellationToken = default)
         {
-           /* var existingStudent = await _repository.GetAsync(new StudentSpec(student.Id), cancellationToken);
-
-            if (existingStudent != null)
-            {
-                // Update student properties as needed
-                await _repository.UpdateAsync(existingStudent, cancellationToken);
-            }
-
-            return ServiceResponse.ForSuccess();*/
-
             if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Id != student.Id) // Verify who can add the user, you can change this however you se fit.
             {
                 return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can update the user!", ErrorCodes.CannotUpdate));
@@ -101,8 +101,13 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
             return ServiceResponse.ForSuccess();
         }
 
-        public async Task<ServiceResponse> DeleteStudent(Guid id, CancellationToken cancellationToken = default)
+        public async Task<ServiceResponse> DeleteStudent(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
         {
+            if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Id != id) // Verify who can add the user, you can change this however you se fit.
+            {
+                return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can delete the user!", ErrorCodes.CannotDelete));
+            }
+
             await _repository.DeleteAsync<Student>(id, cancellationToken);
 
             return ServiceResponse.ForSuccess();

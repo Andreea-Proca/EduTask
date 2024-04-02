@@ -1,4 +1,5 @@
-﻿using MobyLabWebProgramming.Core.Entities;
+﻿using Ardalis.Specification;
+using MobyLabWebProgramming.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,8 @@ public sealed class SubjectSpec : BaseSpec<SubjectSpec, Subject>
     public SubjectSpec(Guid id) : base(id)
     {
     }
-
-    /*    public UserSpec(string email)
-        {
-            Query.Where(e => e.Email == email);
-        }*/
+    public SubjectSpec(string name)
+    {
+        Query.Where(e => e.Name == name);
+    }
 }

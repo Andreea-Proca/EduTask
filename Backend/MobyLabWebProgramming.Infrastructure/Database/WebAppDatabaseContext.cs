@@ -33,7 +33,7 @@ public sealed class WebAppDatabaseContext : DbContext
         modelBuilder.Entity<User>()
             .HasDiscriminator<string>("user_type")
             .HasValue<User>("base")
-            .HasValue<Student>("Student");
+            .HasValue<Student>("student");
 
         // Add discriminator configuration for User and its derived classes
         modelBuilder.Entity<User>()

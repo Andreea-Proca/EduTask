@@ -15,11 +15,18 @@ namespace MobyLabWebProgramming.Core.Specifications
             Id = e.Id,
             Name = e.Name,
             Description = e.Description,
-           // Assignments = MapAssignmentToDTO(e.Assignments), // You might need to map Assignments to AssignmentDTO here
-           // Professor = MapProfessorToDTO(e.Professor), // You might need to map Professor to ProfessorDTO here
-           // ProfessorId = e.ProfessorId,
-           // Students = MapStudentToDTO(e.Students), // You might need to map Students to StudentDTO here
-           // StudentId = e.StudentId
+            Professor = new()
+            {
+                Id = e.Professor.Id,
+                Email = e.Professor.Email,
+                Name = e.Professor.Name,
+                Role = e.Professor.Role
+            },
+            // Assignments = MapAssignmentToDTO(e.Assignments), // You might need to map Assignments to AssignmentDTO here
+            // Professor = MapProfessorToDTO(e.Professor), // You might need to map Professor to ProfessorDTO here
+            // ProfessorId = e.ProfessorId,
+            // Students = MapStudentToDTO(e.Students), // You might need to map Students to StudentDTO here
+            // StudentId = e.StudentId
         };
 
         private ICollection<AssignmentDTO> MapAssignmentToDTO(ICollection<Assignment> assignments)

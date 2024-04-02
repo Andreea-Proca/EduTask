@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
+using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Infrastructure.Authorization;
+using MobyLabWebProgramming.Infrastructure.Extensions;
 using MobyLabWebProgramming.Infrastructure.Services.Implementations;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 
@@ -26,50 +28,72 @@ public class ProfessorController : AuthorizedController
             _professorService = professorService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<Professor>>> GetProfessor(Guid id)
-        {
-            var result = await _professorService.GetProfessor(id);
-            return Ok(result);
-        }
+    [Authorize]
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<RequestResponse<ProfessorDTO>>> GetById([FromRoute] Guid id) // The FromRoute attribute will bind the id from the route to this parameter.
+    {
+        var currentUser = await GetCurrentUser();
 
-        [HttpGet]
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _professorService.GetProfessor(id)) :
+            this.ErrorMessageResult<ProfessorDTO>(currentUser.Error);
+    }
+
+    [Authorize]
+    [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetPage.
+    public async Task<ActionResult<RequestResponse<PagedResponse<ProfessorDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination) // The FromQuery attribute will bind the parameters matching the names of
+                                                                                                                                         // the PaginationSearchQueryParams properties to the object in the method parameter.
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _professorService.GetProfessorsPage(pagination)) :
+            this.ErrorMessageResult<PagedResponse<ProfessorDTO>>(currentUser.Error);
+    }
+
+    /*
+    [Authorize]
+    [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<Professor>>>> GetProfessors()
         {
             var result = await _professorService.GetProfessors();
             return Ok(result);
-        }
+        } */
 
-        [Authorize]
+    [Authorize]
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse>> AddProfessor([FromBody] ProfessorAddDTO professor)
+        public async Task<ActionResult<RequestResponse>> Add([FromBody] ProfessorAddDTO professor)
         {
-        var currentUser = await GetCurrentUser();
-        professor.Password = PasswordUtils.HashPassword(professor.Password);
-        var result = await _professorService.AddProfessor(professor, currentUser.Result);
-        return Ok(result);
-    }
+            var currentUser = await GetCurrentUser();
+            professor.Password = PasswordUtils.HashPassword(professor.Password);
 
-        [Authorize]
-        [HttpPut("{id}")]
-        public async Task<ActionResult<ServiceResponse>> UpdateProfessor(Guid id, [FromBody] ProfessorUpdateDTO professor)
-        {
-        /* professor.Id = id; // Ensure the ID from the URL matches the professor object
-         var result = await _professorService.UpdateProfessor(professor);
-         return Ok(result);*/
-
-        var currentUser = await GetCurrentUser();
-        var result = await _professorService.UpdateProfessor(professor with
-        {
-            Password = !string.IsNullOrWhiteSpace(professor.Password) ? PasswordUtils.HashPassword(professor.Password) : null
-        }, currentUser.Result);
-        return Ok(result);
+            return currentUser.Result != null ?
+               this.FromServiceResponse(await _professorService.AddProfessor(professor, currentUser.Result)) :
+               this.ErrorMessageResult(currentUser.Error);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ServiceResponse>> DeleteProfessor(Guid id)
+        [Authorize]
+        [HttpPut]
+        public async Task<ActionResult<RequestResponse>> Update([FromBody] ProfessorUpdateDTO professor)
         {
-            var result = await _professorService.DeleteProfessor(id);
-            return Ok(result);
+            var currentUser = await GetCurrentUser();
+
+            return currentUser.Result != null ?
+                this.FromServiceResponse(await _professorService.UpdateProfessor(professor with
+                {
+                    Password = !string.IsNullOrWhiteSpace(professor.Password) ? PasswordUtils.HashPassword(professor.Password) : null
+                }, currentUser.Result)) :
+                this.ErrorMessageResult(currentUser.Error);
+        }
+
+        [Authorize] // You need to use this attribute to protect the route access, it will return a Forbidden status code if the JWT is not present or invalid, and also it will decode the JWT token.
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<RequestResponse>> Delete([FromRoute] Guid id)
+        {
+            var currentUser = await GetCurrentUser();
+
+            return currentUser.Result != null ?
+                this.FromServiceResponse(await _professorService.DeleteProfessor(id)) :
+                this.ErrorMessageResult(currentUser.Error);
         }
     }

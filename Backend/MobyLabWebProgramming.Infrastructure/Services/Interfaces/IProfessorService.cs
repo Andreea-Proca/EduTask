@@ -17,14 +17,17 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
 public interface IProfessorService
 {
-    public Task<ServiceResponse<Professor>> GetProfessor(Guid id, CancellationToken cancellationToken = default);
+    public Task<ServiceResponse<ProfessorDTO>> GetProfessor(Guid id, CancellationToken cancellationToken = default);
 
-    public Task<ServiceResponse<List<Professor>>> GetProfessors(CancellationToken cancellationToken = default);
+   // public Task<ServiceResponse<List<Professor>>> GetProfessors(CancellationToken cancellationToken = default);
 
-    public Task<ServiceResponse> AddProfessor(ProfessorAddDTO student, UserDTO? requestingUser, CancellationToken cancellationToken = default);
+    public Task<ServiceResponse<PagedResponse<ProfessorDTO>>> GetProfessorsPage(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default);
 
-    public Task<ServiceResponse> UpdateProfessor(ProfessorUpdateDTO student, UserDTO? requestingUser, CancellationToken cancellationToken = default);
+    public Task<ServiceResponse<int>> GetProfessorCount(CancellationToken cancellationToken = default);
+    public Task<ServiceResponse> AddProfessor(ProfessorAddDTO professor, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
 
-    public Task<ServiceResponse> DeleteProfessor(Guid id, CancellationToken cancellationToken = default);
+    public Task<ServiceResponse> UpdateProfessor(ProfessorUpdateDTO professor, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
+
+    public Task<ServiceResponse> DeleteProfessor(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
 
 }

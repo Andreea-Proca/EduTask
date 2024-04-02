@@ -16,9 +16,15 @@ namespace MobyLabWebProgramming.Core.Specifications
             Title = e.Title,
             Description = e.Description,
             DueDate = e.DueDate,
-            SubjectId = e.SubjectId,
-           // Subject = MapSubjectToDTO(e.Subject),
-           // UserFiles = MapUserFilesToDTO(e.UserFiles)
+            Subject = new()
+            {
+                Id = e.Subject.Id,
+                Name = e.Subject.Name,
+                Description = e.Subject.Description
+            },
+            //SubjectId = e.SubjectId,
+            //Subject = MapSubjectToDTO(e.Subject),
+            // UserFiles = MapUserFilesToDTO(e.UserFiles)
         };
 
         private SubjectDTO MapSubjectToDTO(Subject subject)

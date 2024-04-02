@@ -1,4 +1,5 @@
-﻿using MobyLabWebProgramming.Core.Entities;
+﻿using Ardalis.Specification;
+using MobyLabWebProgramming.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,8 @@ public sealed class AssignmentSpec : BaseSpec<AssignmentSpec, Assignment>
     {
     }
 
-    /*    public UserSpec(string email)
+        public AssignmentSpec(string title)
         {
-            Query.Where(e => e.Email == email);
-        }*/
+            Query.Where(e => e.Title == title);
+        }
 }

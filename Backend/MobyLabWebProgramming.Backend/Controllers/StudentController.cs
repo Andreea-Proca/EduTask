@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
+using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Infrastructure.Authorization;
 using MobyLabWebProgramming.Infrastructure.Extensions;
@@ -27,60 +28,75 @@ public class StudentController : AuthorizedController
         _studentService = studentService;
     }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<Student>>> GetStudent(Guid id)
-        {
-            var result = await _studentService.GetStudent(id);
-            return Ok(result);
+        [Authorize]    
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<RequestResponse<StudentDTO>>> GetById([FromRoute] Guid id)
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _studentService.GetStudent(id)) :
+            this.ErrorMessageResult<StudentDTO>(currentUser.Error);
+
+        //var result = await _studentService.GetStudent(id);
+            //return Ok(result);
         }
 
+    /*
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<Student>>>> GetStudents()
         {
-            var result = await _studentService.GetStudents();
+            var result = await _studentService.GetStudentsPage();
             return Ok(result);
-        }
+        } */
 
-        [Authorize]
+    [Authorize]
+    [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetPage.
+    public async Task<ActionResult<RequestResponse<PagedResponse<StudentDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination) // The FromQuery attribute will bind the parameters matching the names of
+                                                                                                                                         // the PaginationSearchQueryParams properties to the object in the method parameter.
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _studentService.GetStudentsPage(pagination)) :
+            this.ErrorMessageResult<PagedResponse<StudentDTO>>(currentUser.Error);
+    }
+
+    [Authorize]
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse>> Add([FromBody] StudentAddDTO student)
+        public async Task<ActionResult<RequestResponse>> Add([FromBody] StudentAddDTO student)
         {
-           /* var result = await _studentService.AddStudent(student);
-            return Ok(result);*/
-        var currentUser = await GetCurrentUser();
-        student.Password = PasswordUtils.HashPassword(student.Password);
-        var result = await _studentService.AddStudent(student, currentUser.Result);
-        return Ok(result);
-        /*return currentUser.Result != null ?
-            this.FromServiceResponse(await StudentService.AddStudent(student, currentUser.Result)) :
-            this.ErrorMessageResult(currentUser.Error);   */
+            var currentUser = await GetCurrentUser();
+            student.Password = PasswordUtils.HashPassword(student.Password);
+
+            return currentUser.Result != null ?
+                this.FromServiceResponse(await _studentService.AddStudent(student, currentUser.Result)) :
+                this.ErrorMessageResult(currentUser.Error);
         }
 
         [Authorize]
-        [HttpPut("{id}")]
-        public async Task<ActionResult<ServiceResponse>> Update(Guid id, [FromBody] StudentUpdateDTO student)
+        [HttpPut]
+        public async Task<ActionResult<RequestResponse>> Update([FromBody] StudentUpdateDTO student)
         {
-        /*   student.Id = id; // Ensure the ID from the URL matches the student object
-           var result = await _studentService.UpdateStudent(student);
-           return Ok(result);*/
-        var currentUser = await GetCurrentUser();
-        var result = await _studentService.UpdateStudent(student with
-        {
-            Password = !string.IsNullOrWhiteSpace(student.Password) ? PasswordUtils.HashPassword(student.Password) : null
-        }, currentUser.Result);
-        return Ok(result);
-      /*  return currentUser.Result != null ?
-            this.FromServiceResponse(await StudentService.UpdateStudent(student with
-            {
-                Password = !string.IsNullOrWhiteSpace(student.Password) ? PasswordUtils.HashPassword(student.Password) : null
-            }, currentUser.Result)) :
-            this.ErrorMessageResult(currentUser.Error);*/
+            var currentUser = await GetCurrentUser();
+
+            return currentUser.Result != null ?
+                this.FromServiceResponse(await _studentService.UpdateStudent(student with
+                {
+                    Password = !string.IsNullOrWhiteSpace(student.Password) ? PasswordUtils.HashPassword(student.Password) : null
+                }, currentUser.Result)) :
+                this.ErrorMessageResult(currentUser.Error);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ServiceResponse>> DeleteStudent(Guid id)
+        [Authorize] // You need to use this attribute to protect the route access, it will return a Forbidden status code if the JWT is not present or invalid, and also it will decode the JWT token.
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<RequestResponse>> Delete([FromRoute] Guid id)
         {
-            var result = await _studentService.DeleteStudent(id);
-            return Ok(result);
+            var currentUser = await GetCurrentUser();
+
+            return currentUser.Result != null ?
+                this.FromServiceResponse(await _studentService.DeleteStudent(id)) :
+                this.ErrorMessageResult(currentUser.Error);
         }
     }
