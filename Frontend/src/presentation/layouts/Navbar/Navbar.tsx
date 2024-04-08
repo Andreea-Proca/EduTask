@@ -114,6 +114,14 @@ export const Navbar = () => {
               {formatMessage({ id: "globals.logout" })}
             </Button>}
           </Grid>
+          <Grid container item direction="column" xs={2}>
+            {!loggedIn && <Button color="inherit">  {/* If the user is not logged in show a button that redirects to the login page. */}
+              <Link style={{ color: 'white' }} to={AppRoute.Register}>
+                {formatMessage({ id: "globals.register" })}
+              </Link>
+            </Button>}
+
+          </Grid>
         </Grid>
       </Toolbar>
     </AppBar>

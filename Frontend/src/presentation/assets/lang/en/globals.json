@@ -2,6 +2,7 @@
     "globals.welcome": "Welcome!",
     "globals.login": "Login",
     "globals.logout": "Logout",
+    "globals.register": "Register",
     "globals.submit": "Submit",
     "globals.email": "E-mail",
     "globals.password": "Password",
@@ -25,6 +26,7 @@
     "globals.addBy": "Added by", 
     "globals.createdAt": "Created at",
     "globals.file": "File",
+    "globals.registerTitle": "Register a new account",
     "globals.placeholders.textInput": "Please enter {fieldName}",
     "globals.placeholders.selectInput": "Please select the {fieldName}",
     "globals.validations.requiredField": "{fieldName} is a required field!"

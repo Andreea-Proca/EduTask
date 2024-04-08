@@ -9,6 +9,7 @@ import { useUserApi } from "@infrastructure/apis/api-management";
 import { useCallback } from "react";
 import { UserRoleEnum } from "@infrastructure/apis/client";
 import { SelectChangeEvent } from "@mui/material";
+import { useAppRouter } from "@infrastructure/hooks/useAppRouter";
 
 /**
  * Use a function to return the default values of the form and the validation schema.
@@ -70,8 +71,8 @@ const useInitUserAddForm = () => {
         role: yup.string()
             .oneOf([ // The select input should have one of these values.
                 UserRoleEnum.Admin,
-                UserRoleEnum.Personnel,
-                UserRoleEnum.Client
+                UserRoleEnum.Professor,
+                UserRoleEnum.Student
             ])
             .required(formatMessage(
                 { id: "globals.validations.requiredField" },
@@ -93,6 +94,7 @@ const useInitUserAddForm = () => {
  */
 export const useUserAddFormController = (onSubmit?: () => void): UserAddFormController => {
     const { defaultValues, resolver } = useInitUserAddForm();
+    const { redirectToLogin } = useAppRouter();
     const { addUser: { mutation, key: mutationKey }, getUsers: { key: queryKey } } = useUserApi();
     const { mutateAsync: add, status } = useMutation({
         mutationKey: [mutationKey], 
@@ -105,8 +107,9 @@ export const useUserAddFormController = (onSubmit?: () => void): UserAddFormCont
 
             if (onSubmit) {
                 onSubmit();
+                redirectToLogin(); // Redirect to the login page after the form submission.
             }
-        }), [add, queryClient, queryKey]);
+        }), [add, queryClient, queryKey, redirectToLogin, onSubmit]);
 
     const {
         register,

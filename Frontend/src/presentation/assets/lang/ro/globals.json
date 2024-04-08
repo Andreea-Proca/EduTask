@@ -2,6 +2,7 @@
     "globals.welcome": "Bine ati venit!",
     "globals.login": "Autentificare",
     "globals.logout": "Iesire",
+    "globals.register": "Inregistrare",
     "globals.submit": "Trimite",
     "globals.email": "E-mail",
     "globals.password": "Parola",
@@ -25,6 +26,7 @@
     "globals.addBy": "Adaugat de", 
     "globals.createdAt": "Creat la",
     "globals.file": "Fisier",
+    "globals.registerTitle": "Inregistreaza un cont nou",
     "globals.placeholders.textInput": "Va rugam sa introduceti {fieldName}",
     "globals.placeholders.selectInput": "Va rugam sa selectati {fieldName}",
     "globals.validations.requiredField": "{fieldName} este camp obligatoriu!"

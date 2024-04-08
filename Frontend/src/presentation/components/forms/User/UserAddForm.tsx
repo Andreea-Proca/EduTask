@@ -14,6 +14,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useUserAddFormController } from "./UserAddForm.controller";
 import { isEmpty, isUndefined } from "lodash";
 import { UserRoleEnum } from "@infrastructure/apis/client";
+import "presentation/assets/lang";
+import { ContentCard } from "@presentation/components/ui/ContentCard";
 
 /**
  * Here we declare the user add form component.
@@ -25,8 +27,12 @@ export const UserAddForm = (props: { onSubmit?: () => void }) => {
 
     return <form onSubmit={actions.handleSubmit(actions.submit)}> {/* Wrap your form into a form tag and use the handle submit callback to validate the form and call the data submission. */}
         <Stack spacing={4} style={{ width: "100%" }}>
-            <div>
-                <Grid container item direction="row" xs={12} columnSpacing={4}>
+            <ContentCard>
+            {/* <div>  */}
+            <div style={{ textAlign: "center", marginBottom: "20px", fontSize: "24px", fontWeight: "bold", color: "#333" }}>
+                {formatMessage({ id: "globals.registerTitle" })}  
+            </div>
+                <Grid container item direction="column" xs={12} columnSpacing={4}>
                     <Grid container item direction="column" xs={6} md={6}>
                         <FormControl
                             fullWidth
@@ -135,9 +141,9 @@ export const UserAddForm = (props: { onSubmit?: () => void }) => {
                                 <MenuItem value={UserRoleEnum.Professor}>
                                     <FormattedMessage id="globals.professor" />
                                 </MenuItem>
-                                <MenuItem value={UserRoleEnum.Admin}>
+                                {/* <MenuItem value={UserRoleEnum.Admin}>
                                     <FormattedMessage id="globals.admin" />
-                                </MenuItem>
+                                </MenuItem> */}
                             </Select>
                             <FormHelperText
                                 hidden={isUndefined(state.errors.role)}
@@ -147,16 +153,19 @@ export const UserAddForm = (props: { onSubmit?: () => void }) => {
                         </FormControl>
                     </Grid>
                 </Grid>
+                <div> <br /> </div>
                 <Grid container item direction="row" xs={12} className="padding-top-sm">
                     <Grid container item direction="column" xs={12} md={7}></Grid>
                     <Grid container item direction="column" xs={5}>
-                        <Button type="submit" disabled={!isEmpty(state.errors) || computed.isSubmitting}> {/* Add a button with type submit to call the submission callback if the button is a descended of the form element. */}
+                        <Button type="submit" disabled={!isEmpty(state.errors) || computed.isSubmitting}
+                         style={{ backgroundColor: '#f0f0f0', color: '#000000' }} > 
+                        {/* Add a button with type submit to call the submission callback if the button is a descended of the form element. */}
                             {!computed.isSubmitting && <FormattedMessage id="globals.submit" />}
                             {computed.isSubmitting && <CircularProgress />}
                         </Button>
                     </Grid>
                 </Grid>
-            </div>
+            </ContentCard>
         </Stack>
     </form>
 };

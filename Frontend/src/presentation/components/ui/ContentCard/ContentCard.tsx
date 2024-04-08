@@ -6,8 +6,9 @@ import "./contentCard.scss";
 /**
  * This component wraps its content into a card like container.
  */
+
 export const ContentCard = memo(
-  ({ children, title }: PropsWithChildren<ContentCardProps>) => {
+  ({ children, title, color }: PropsWithChildren<ContentCardProps>) => {
     const id = useId();
 
     const showTitle = useMemo(
@@ -16,7 +17,7 @@ export const ContentCard = memo(
     );
 
     return (
-      <div id={id} className="content__card__container">
+      <div id={id} className="content__card__container" style={{ backgroundColor: color }}>
         {showTitle && <h4>{title}</h4>}
         <div className="content__card__body">{children}</div>
       </div>

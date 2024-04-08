@@ -12,6 +12,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useLoginFormController } from "./LoginForm.controller";
 import { ContentCard } from "@presentation/components/ui/ContentCard";
 import { isEmpty, isUndefined } from "lodash";
+import { grey, red } from "@mui/material/colors";
 
 /**
  * Here we declare the login form component.
@@ -21,8 +22,12 @@ export const LoginForm = () => {
     const { state, actions, computed } = useLoginFormController(); // Use the controller.
 
     return <form onSubmit={actions.handleSubmit(actions.submit)}> {/* Wrap your form into a form tag and use the handle submit callback to validate the form and call the data submission. */}
-        <Stack spacing={4} style={{ width: "100%" }}>
-            <ContentCard title={formatMessage({ id: "globals.login" })}>
+        <Stack spacing={4} style={{ width: "100%"}}>
+            {/* <ContentCard title={formatMessage({ id: "globals.login" })}> */}
+            <ContentCard>
+                <div style={{ textAlign: "center", marginBottom: "20px", fontSize: "24px", fontWeight: "bold", color: "#333" }}>
+                    {formatMessage({ id: "globals.login" })} 
+                </div>
                 <Grid container item direction="row" xs={12} columnSpacing={4}>
                     <Grid container item direction="column" xs={12} md={12} style={{ marginBottom: "1rem" }}>
                         <FormControl 
@@ -78,16 +83,19 @@ export const LoginForm = () => {
                         </FormControl>
                     </Grid>
                 </Grid>
-            </ContentCard>
+                <div> <br /> </div>
             <Grid container item direction="row" xs={12} className="padding-top-sm">
                 <Grid container item direction="column" xs={12} md={7}></Grid>
                 <Grid container item direction="column" xs={5}>
-                    <Button type="submit" disabled={!isEmpty(state.errors) || computed.isSubmitting}> {/* Add a button with type submit to call the submission callback if the button is a descended of the form element. */}
+                    <Button type="submit" disabled={!isEmpty(state.errors) || computed.isSubmitting}
+                    style={{ backgroundColor: '#f0f0f0', color: '#000000' }} > 
+                    {/* Add a button with type submit to call the submission callback if the button is a descended of the form element. */}
                         {!computed.isSubmitting && <FormattedMessage id="globals.submit" />}
                         {computed.isSubmitting && <CircularProgress />}
                     </Button>
                 </Grid>
             </Grid>
+            </ContentCard>
         </Stack>
     </form>
 };
