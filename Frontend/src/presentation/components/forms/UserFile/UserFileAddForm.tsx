@@ -12,18 +12,22 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useUserFileAddFormController } from "./UserFileAddForm.controller";
 import { isEmpty, isUndefined } from "lodash";
 import { UploadButton } from "@presentation/components/ui/UploadButton";
+import { ContentCard } from "@presentation/components/ui/ContentCard";
 
 /**
  * Here we declare the user file add form component.
  * This form may be used in modals so the onSubmit callback could close the modal on completion.
  */
-export const UserFileAddForm = (props: { onSubmit?: () => void }) => {
+export const UserFileAddForm = (props: { onSubmit?: () => void, id: string}) => {
     const { formatMessage } = useIntl();
-    const { state, actions, computed } = useUserFileAddFormController(props.onSubmit);
+    const { state, actions, computed } = useUserFileAddFormController(props.onSubmit, props.id);
 
     return <form onSubmit={actions.handleSubmit(actions.submit)}> {/* Wrap your form into a form tag and use the handle submit callback to validate the form and call the data submission. */}
         <Stack spacing={4} style={{ width: "100%" }}>
-            <div>
+        <ContentCard >
+                <div style={{ textAlign: "center", marginBottom: "20px", fontSize: "24px", fontWeight: "bold", color: "#333" }}>
+                    {formatMessage({ id: "globals.addUserFileTitle" })}
+                </div>
                 <Grid container item direction="row" xs={12} columnSpacing={4}>
                     <Grid container item direction="column" xs={6} md={6}>
                         <FormControl
@@ -82,7 +86,7 @@ export const UserFileAddForm = (props: { onSubmit?: () => void }) => {
                         </Button>
                     </Grid>
                 </Grid>
-            </div>
+            </ContentCard>
         </Stack>
     </form>
 };

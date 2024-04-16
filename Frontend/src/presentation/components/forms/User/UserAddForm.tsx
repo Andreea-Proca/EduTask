@@ -27,7 +27,7 @@ export const UserAddForm = (props: { onSubmit?: () => void }) => {
 
     return <form onSubmit={actions.handleSubmit(actions.submit)}> {/* Wrap your form into a form tag and use the handle submit callback to validate the form and call the data submission. */}
         <Stack spacing={4} style={{ width: "100%" }}>
-            <ContentCard>
+            <ContentCard >
             {/* <div>  */}
             <div style={{ textAlign: "center", marginBottom: "20px", fontSize: "24px", fontWeight: "bold", color: "#333" }}>
                 {formatMessage({ id: "globals.registerTitle" })}  

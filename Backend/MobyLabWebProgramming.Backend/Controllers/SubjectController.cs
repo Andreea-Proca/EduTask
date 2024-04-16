@@ -39,14 +39,20 @@ public class SubjectController : AuthorizedController
             this.FromServiceResponse(await _subjectService.GetSubject(id)) :
             this.ErrorMessageResult<SubjectDTO>(currentUser.Error);
     }
-    /*
+    
     [Authorize]
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<Subject>>>> GetSubjects()
+        public async Task<ActionResult<RequestResponse<List<SubjectDTO>>>> GetSubjects()
         {
-            var result = await _subjectService.GetSubjects();
-            return Ok(result);
-        } */
+        //var result = await _subjectService.GetSubjects();
+        // return Ok(result);
+
+            var currentUser = await GetCurrentUser();
+
+            return currentUser.Result != null ?
+                this.FromServiceResponse(await _subjectService.GetSubjects()) :
+                this.ErrorMessageResult<List<SubjectDTO>>(currentUser.Error);
+        }
 
     /*
     [Authorize]

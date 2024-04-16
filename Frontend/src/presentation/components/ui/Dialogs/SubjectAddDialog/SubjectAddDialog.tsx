@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useSubjectAddDialogController } from "./SubjectAddDialog.controller";
-import { UserAddForm } from "@presentation/components/forms/User/UserAddForm";
+import { SubjectAddForm } from "@presentation/components/forms/Subject/SubjectAddForm";
 import { useIntl } from "react-intl";
 
 /**
@@ -12,16 +12,16 @@ export const SubjectAddDialog = () => {
 
   return <div>
     <Button variant="outlined" onClick={open}>
-      {formatMessage({ id: "labels.addUser" })}
+      {formatMessage({ id: "labels.addSubject" })}
     </Button>
     <Dialog
       open={isOpen}
       onClose={close}>
       <DialogTitle>
-        {formatMessage({ id: "labels.addUser" })}
+        {formatMessage({ id: "labels.addSubject" })}
       </DialogTitle>
       <DialogContent>
-        <UserAddForm onSubmit={close} />
+        <SubjectAddForm onSubmit={close} />
       </DialogContent>
     </Dialog>
   </div>

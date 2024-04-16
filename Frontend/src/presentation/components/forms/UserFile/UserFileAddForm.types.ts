@@ -9,7 +9,8 @@ import {
 
 export type UserFileAddFormModel = {
     description?: string;
-    file: File
+    file: File;
+    assignmentId: string;
 };
 
 export type UserFileAddFormState = {

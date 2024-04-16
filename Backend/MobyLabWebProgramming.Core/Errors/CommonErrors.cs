@@ -15,4 +15,5 @@ public static class CommonErrors
     public static ErrorMessage StudentNotFound => new(HttpStatusCode.NotFound, "Student doesn't exist!", ErrorCodes.EntityNotFound);
     public static ErrorMessage SubjectNotFound => new(HttpStatusCode.NotFound, "Subject doesn't exist!", ErrorCodes.EntityNotFound);
     public static ErrorMessage AssignmentNotFound => new(HttpStatusCode.NotFound, "Assignment doesn't exist!", ErrorCodes.EntityNotFound);
+    public static ErrorMessage FeedbackNotFound => new(HttpStatusCode.NotFound, "Feedback doesn't exist!", ErrorCodes.EntityNotFound);
 }

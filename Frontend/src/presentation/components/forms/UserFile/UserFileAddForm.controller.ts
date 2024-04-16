@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUserFileApi } from "@infrastructure/apis/api-management";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 /**
  * Create a hook to get the validation schema.
@@ -21,6 +21,14 @@ const useInitUserFileAddForm = () => {
                     fieldName: formatMessage({
                         id: "globals.file",
                     }),
+                })),
+        assignmentId: yup.string()
+            .required(formatMessage(
+                { id: "globals.validations.requiredField" },
+                {
+                    fieldName: formatMessage({
+                        id: "globals.id",
+                    }),
                 }))
     });
 
@@ -32,7 +40,7 @@ const useInitUserFileAddForm = () => {
 /**
  * Create a controller hook for the form and return any data that is necessary for the form.
  */
-export const useUserFileAddFormController = (onSubmit?: () => void): UserFileAddFormController => {
+export const useUserFileAddFormController = (onSubmit?: () => void, assignmentId?: string): UserFileAddFormController => {
     const { defaultValues, resolver } = useInitUserFileAddForm();
     const { addUserFile: { mutation, key: mutationKey }, getUserFiles: { key: queryKey } } = useUserFileApi();
     const { mutateAsync: add, status } = useMutation({
@@ -65,6 +73,11 @@ export const useUserFileAddFormController = (onSubmit?: () => void): UserFileAdd
             shouldValidate: true
         });
     }, [setValue]);
+    
+    useEffect(() => {
+        console.log("idddd: ", assignmentId);
+        setValue("assignmentId", assignmentId ?? "");
+    }, [assignmentId, setValue]);
 
     return {
         actions: { // Return any callbacks needed to interact with the form.

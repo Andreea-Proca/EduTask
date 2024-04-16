@@ -82,6 +82,59 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.ToTable("Blog");
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AssignmentCompletion")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Attendance")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(65000)
+                        .HasColumnType("character varying(65000)");
+
+                    b.Property<string>("Communication")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("Engagement")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Resources")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Understanding")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("Feedback");
+                });
+
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -211,7 +264,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("AssignmentId")
+                    b.Property<Guid>("AssignmentId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -257,7 +310,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 {
                     b.HasBaseType("MobyLabWebProgramming.Core.Entities.User");
 
-                    b.HasDiscriminator().HasValue("Student");
+                    b.HasDiscriminator().HasValue("student");
                 });
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Assignment", b =>
@@ -266,6 +319,17 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .WithMany("Assignments")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Feedback", b =>
+                {
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.Subject", "Subject")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Subject");
@@ -314,15 +378,19 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.UserFile", b =>
                 {
-                    b.HasOne("MobyLabWebProgramming.Core.Entities.Assignment", null)
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.Assignment", "Assignment")
                         .WithMany("UserFiles")
-                        .HasForeignKey("AssignmentId");
+                        .HasForeignKey("AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
                         .WithMany("UserFiles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Assignment");
 
                     b.Navigation("User");
                 });
@@ -340,6 +408,8 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Subject", b =>
                 {
                     b.Navigation("Assignments");
+
+                    b.Navigation("Feedbacks");
 
                     b.Navigation("StudentSubjects");
                 });

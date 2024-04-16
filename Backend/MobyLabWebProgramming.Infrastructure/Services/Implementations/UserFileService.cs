@@ -51,7 +51,8 @@ public class UserFileService : IUserFileService
             Name = file.File.FileName,
             Description = file.Description,
             Path = fileName.Result,
-            UserId = requestingUser.Id
+            UserId = requestingUser.Id,
+            AssignmentId = file.AssignmentId
         }, cancellationToken); // When the file is saved on the filesystem save the returned file path in the database to identify the file.
 
         return ServiceResponse.ForSuccess();

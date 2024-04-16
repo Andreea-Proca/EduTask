@@ -6,7 +6,7 @@ import { UserFileAddForm } from "@presentation/components/forms/UserFile/UserFil
 /**
  * This component wraps the user file add form into a modal dialog.
  */
-export const UserFileAddDialog = () => {
+export const UserFileAddDialog = ({ id }: { id: string }) => {
   const { open, close, isOpen } = useUserFileAddDialogController();
   const { formatMessage } = useIntl();
 
@@ -16,12 +16,12 @@ export const UserFileAddDialog = () => {
     </Button>
     <Dialog
       open={isOpen}
-      onClose={close}>
-      <DialogTitle>
-        {formatMessage({ id: "labels.addUserFile" })}
-      </DialogTitle>
+      onClose={close}
+      //color='#f0f0f0'
+      //backdropStyle={{ backgroundColor: 'lightpink' }}
+      >
       <DialogContent>
-        <UserFileAddForm onSubmit={close} />
+        <UserFileAddForm onSubmit={close} id={id}/>
       </DialogContent>
     </Dialog>
   </div>

@@ -11,4 +11,5 @@ export enum AppRoute {
     Students = "/students",
     Professors = "/professors",
     Register = "/register",
+    Feedback = "/feedback",
 }

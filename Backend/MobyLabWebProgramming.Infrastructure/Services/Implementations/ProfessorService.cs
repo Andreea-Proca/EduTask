@@ -39,13 +39,13 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
                 ServiceResponse<ProfessorDTO>.ForSuccess(result) :
                 ServiceResponse<ProfessorDTO>.FromError(CommonErrors.ProfessorNotFound);
         }
-        /*
+ 
         public async Task<ServiceResponse<List<ProfessorDTO>>> GetProfessors( CancellationToken cancellationToken = default)
         {
-            var result = await _repository.ListAsync<ProfessorDTO>(new ProfessorProjectionSpec(), cancellationToken);
+            var result = await _repository.ListAsync(new ProfessorProjectionSpec(), cancellationToken);
 
             return ServiceResponse<List<ProfessorDTO>>.ForSuccess(result);
-        } */
+        }
 
         public async Task<ServiceResponse<PagedResponse<ProfessorDTO>>> GetProfessorsPage(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)
         {

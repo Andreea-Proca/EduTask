@@ -17,6 +17,7 @@ import * as runtime from '../runtime';
 import type {
   RequestResponse,
   SubjectAddDTO,
+  SubjectDTOListRequestResponse,
   SubjectDTOPagedResponseRequestResponse,
   SubjectDTORequestResponse,
   SubjectUpdateDTO,
@@ -26,6 +27,8 @@ import {
     RequestResponseToJSON,
     SubjectAddDTOFromJSON,
     SubjectAddDTOToJSON,
+    SubjectDTOListRequestResponseFromJSON,
+    SubjectDTOListRequestResponseToJSON,
     SubjectDTOPagedResponseRequestResponseFromJSON,
     SubjectDTOPagedResponseRequestResponseToJSON,
     SubjectDTORequestResponseFromJSON,
@@ -193,6 +196,34 @@ export class SubjectApi extends runtime.BaseAPI {
      */
     async apiSubjectGetPageGet(requestParameters: ApiSubjectGetPageGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SubjectDTOPagedResponseRequestResponse> {
         const response = await this.apiSubjectGetPageGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiSubjectGetSubjectsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SubjectDTOListRequestResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/api/Subject/GetSubjects`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SubjectDTOListRequestResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiSubjectGetSubjectsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SubjectDTOListRequestResponse> {
+        const response = await this.apiSubjectGetSubjectsGetRaw(initOverrides);
         return await response.value();
     }
 

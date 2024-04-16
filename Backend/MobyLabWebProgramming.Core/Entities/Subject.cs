@@ -11,6 +11,8 @@ public class Subject : BaseEntity
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
      public ICollection<Assignment> Assignments { get; set; } = default!;
+
+    public ICollection<Feedback> Feedbacks { get; set; } = default!;
     public Professor? Professor { get; set; }
     public Guid ProfessorId { get; set; }
     /*public ICollection<Student>? Students { get; set; }

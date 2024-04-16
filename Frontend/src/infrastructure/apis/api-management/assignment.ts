@@ -9,6 +9,7 @@ const getAssignmentsQueryKey = "getAssignmentsQuery";
 const getAssignmentQueryKey = "getAssignmentQuery";
 const addAssignmentMutationKey = "addAssignmentMutation";
 const deleteAssignmentMutationKey = "deleteAssignmentMutation";
+const updateAssignmentMutationKey = "updateAssignmentMutation";
 
 /**
  * Returns the an object with the callbacks that can be used for the React Query API, in this case to manage the user API.
@@ -21,6 +22,7 @@ export const useAssignmentApi = () => {
     const getAssignment = (id: string) => new AssignmentApi(config).apiAssignmentGetByIdIdGet({ id });
     const addAssignment = (user: AssignmentAddDTO) => new AssignmentApi(config).apiAssignmentAddPost({ assignmentAddDTO: user });
     const deleteAssignment = (id: string) => new AssignmentApi(config).apiAssignmentDeleteIdDelete({ id });
+    const updateAssignment = (user: AssignmentAddDTO) => new AssignmentApi(config).apiAssignmentUpdatePut({ assignmentUpdateDTO: user});
 
     return {
         getAssignments: { // Return the query object.
@@ -38,6 +40,10 @@ export const useAssignmentApi = () => {
         deleteAssignment: {
             key: deleteAssignmentMutationKey,
             mutation: deleteAssignment
+        },
+        updateAssignment: {
+            key: updateAssignmentMutationKey,
+            mutation: updateAssignment
         }
     }
 }

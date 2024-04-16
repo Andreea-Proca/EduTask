@@ -31,13 +31,13 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
                 : ServiceResponse<SubjectDTO>.FromError(CommonErrors.SubjectNotFound);
         }
 
-        /*
-        public async Task<ServiceResponse<List<Subject>>> GetSubjects(CancellationToken cancellationToken = default)
+        
+        public async Task<ServiceResponse<List<SubjectDTO>>> GetSubjects(CancellationToken cancellationToken = default)
         {
-            var result = await _repository.ListAsync<Subject>(new SubjectProjectionSpec(), cancellationToken);
+            var subjects = await _repository.ListAsync(new SubjectProjectionSpec(), cancellationToken);
 
-            return ServiceResponse<List<Subject>>.ForSuccess(result);
-        } */
+            return ServiceResponse<List<SubjectDTO>>.ForSuccess(subjects);
+        } 
 
         public async Task<ServiceResponse<PagedResponse<SubjectDTO>>> GetSubjectsPage(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)
         {

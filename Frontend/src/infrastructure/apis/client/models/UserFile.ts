@@ -13,6 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { Assignment } from './Assignment';
+import {
+    AssignmentFromJSON,
+    AssignmentFromJSONTyped,
+    AssignmentToJSON,
+} from './Assignment';
 import type { User } from './User';
 import {
     UserFromJSON,
@@ -74,6 +80,18 @@ export interface UserFile {
      * @memberof UserFile
      */
     user?: User;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserFile
+     */
+    assignmentId?: string;
+    /**
+     * 
+     * @type {Assignment}
+     * @memberof UserFile
+     */
+    assignment?: Assignment;
 }
 
 /**
@@ -103,6 +121,8 @@ export function UserFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'description': !exists(json, 'description') ? undefined : json['description'],
         'userId': !exists(json, 'userId') ? undefined : json['userId'],
         'user': !exists(json, 'user') ? undefined : UserFromJSON(json['user']),
+        'assignmentId': !exists(json, 'assignmentId') ? undefined : json['assignmentId'],
+        'assignment': !exists(json, 'assignment') ? undefined : AssignmentFromJSON(json['assignment']),
     };
 }
 
@@ -123,6 +143,8 @@ export function UserFileToJSON(value?: UserFile | null): any {
         'description': value.description,
         'userId': value.userId,
         'user': UserToJSON(value.user),
+        'assignmentId': value.assignmentId,
+        'assignment': AssignmentToJSON(value.assignment),
     };
 }
 

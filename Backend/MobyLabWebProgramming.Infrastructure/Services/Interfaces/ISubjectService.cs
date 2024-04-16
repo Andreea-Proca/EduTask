@@ -20,7 +20,7 @@ public interface ISubjectService
 {
     public Task<ServiceResponse<SubjectDTO>> GetSubject(Guid id, CancellationToken cancellationToken = default);
 
-   // public Task<ServiceResponse<List<Subject>>> GetSubjects(CancellationToken cancellationToken = default);
+    public Task<ServiceResponse<List<SubjectDTO>>> GetSubjects(CancellationToken cancellationToken = default);
 
     public Task<ServiceResponse<PagedResponse<SubjectDTO>>> GetSubjectsPage(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default);
     public Task<ServiceResponse<int>> GetSubjectCount(CancellationToken cancellationToken = default);

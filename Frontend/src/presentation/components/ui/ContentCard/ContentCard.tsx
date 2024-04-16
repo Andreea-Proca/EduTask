@@ -8,7 +8,7 @@ import "./contentCard.scss";
  */
 
 export const ContentCard = memo(
-  ({ children, title, color }: PropsWithChildren<ContentCardProps>) => {
+  ({ children, title, color, marginRight }: PropsWithChildren<ContentCardProps>) => {
     const id = useId();
 
     const showTitle = useMemo(
@@ -17,7 +17,7 @@ export const ContentCard = memo(
     );
 
     return (
-      <div id={id} className="content__card__container" style={{ backgroundColor: color }}>
+      <div id={id} className="content__card__container" style={{ backgroundColor: color, paddingRight: marginRight }}>
         {showTitle && <h4>{title}</h4>}
         <div className="content__card__body">{children}</div>
       </div>

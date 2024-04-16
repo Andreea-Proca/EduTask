@@ -6,6 +6,7 @@ import { useSubjectTableController } from "./SubjectTable.controller";
 import { SubjectDTO } from "@infrastructure/apis/client";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SubjectAddDialog } from "../../Dialogs/SubjectAddDialog";
+import { SubjectEditDialog } from "../../Dialogs/SubjectEditDialog";
 import { useAppSelector } from "@application/store";
 
 /**
@@ -83,6 +84,7 @@ export const SubjectTable = () => {
                                 {entry.id !== ownSubjectId && <IconButton color="error" onClick={() => remove(entry.id || '')}>
                                     <DeleteIcon color="error" fontSize='small' />
                                 </IconButton>}
+                                {entry.id !== ownSubjectId &&  <SubjectEditDialog id={entry.id ?? ''}/>}
                             </TableCell>
                         </TableRow>)
                     }

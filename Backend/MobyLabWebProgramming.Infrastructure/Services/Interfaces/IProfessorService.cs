@@ -19,7 +19,7 @@ public interface IProfessorService
 {
     public Task<ServiceResponse<ProfessorDTO>> GetProfessor(Guid id, CancellationToken cancellationToken = default);
 
-   // public Task<ServiceResponse<List<Professor>>> GetProfessors(CancellationToken cancellationToken = default);
+   public Task<ServiceResponse<List<ProfessorDTO>>> GetProfessors(CancellationToken cancellationToken = default);
 
     public Task<ServiceResponse<PagedResponse<ProfessorDTO>>> GetProfessorsPage(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default);
 

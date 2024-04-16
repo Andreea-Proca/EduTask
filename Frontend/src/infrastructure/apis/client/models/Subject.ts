@@ -19,6 +19,12 @@ import {
     AssignmentFromJSONTyped,
     AssignmentToJSON,
 } from './Assignment';
+import type { Feedback } from './Feedback';
+import {
+    FeedbackFromJSON,
+    FeedbackFromJSONTyped,
+    FeedbackToJSON,
+} from './Feedback';
 import type { Professor } from './Professor';
 import {
     ProfessorFromJSON,
@@ -82,6 +88,12 @@ export interface Subject {
     assignments?: Array<Assignment> | null;
     /**
      * 
+     * @type {Array<Feedback>}
+     * @memberof Subject
+     */
+    feedbacks?: Array<Feedback> | null;
+    /**
+     * 
      * @type {Professor}
      * @memberof Subject
      */
@@ -131,6 +143,7 @@ export function SubjectFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
         'name': !exists(json, 'name') ? undefined : json['name'],
         'description': !exists(json, 'description') ? undefined : json['description'],
         'assignments': !exists(json, 'assignments') ? undefined : (json['assignments'] === null ? null : (json['assignments'] as Array<any>).map(AssignmentFromJSON)),
+        'feedbacks': !exists(json, 'feedbacks') ? undefined : (json['feedbacks'] === null ? null : (json['feedbacks'] as Array<any>).map(FeedbackFromJSON)),
         'professor': !exists(json, 'professor') ? undefined : ProfessorFromJSON(json['professor']),
         'professorId': !exists(json, 'professorId') ? undefined : json['professorId'],
         'students': !exists(json, 'students') ? undefined : (json['students'] === null ? null : (json['students'] as Array<any>).map(StudentFromJSON)),
@@ -153,6 +166,7 @@ export function SubjectToJSON(value?: Subject | null): any {
         'name': value.name,
         'description': value.description,
         'assignments': value.assignments === undefined ? undefined : (value.assignments === null ? null : (value.assignments as Array<any>).map(AssignmentToJSON)),
+        'feedbacks': value.feedbacks === undefined ? undefined : (value.feedbacks === null ? null : (value.feedbacks as Array<any>).map(FeedbackToJSON)),
         'professor': ProfessorToJSON(value.professor),
         'professorId': value.professorId,
         'students': value.students === undefined ? undefined : (value.students === null ? null : (value.students as Array<any>).map(StudentToJSON)),

@@ -9,4 +9,6 @@ public class UserFileAddDTO
 {
     public IFormFile File { get; set; } = default!;
     public string? Description { get; set; }
+
+    public Guid AssignmentId { get; set; }
 }

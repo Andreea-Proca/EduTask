@@ -27,6 +27,12 @@ public sealed class UserFileProjectionSpec : BaseSpec<UserFileProjectionSpec, Us
             Name = e.User.Name,
             Role = e.User.Role
         },
+        Assignment = new()
+        {
+            Title = e.Assignment.Title,
+            Description = e.Assignment.Description,
+            DueDate = e.Assignment.DueDate
+        },
         CreatedAt = e.CreatedAt,
         UpdatedAt = e.UpdatedAt
     };

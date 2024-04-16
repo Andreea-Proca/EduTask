@@ -61,6 +61,17 @@ public class ProfessorController : AuthorizedController
         } */
 
     [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<RequestResponse<List<ProfessorDTO>>>> GetProfessors()
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _professorService.GetProfessors()) :
+            this.ErrorMessageResult<List<ProfessorDTO>>(currentUser.Error);
+    }
+
+    [Authorize]
         [HttpPost]
         public async Task<ActionResult<RequestResponse>> Add([FromBody] ProfessorAddDTO professor)
         {

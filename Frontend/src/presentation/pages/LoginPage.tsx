@@ -10,7 +10,7 @@ export const LoginPage = memo(() => {
         <Seo title="MobyLab Web App | Login" />
         <WebsiteLayout>
             <Box sx={{ padding: "0px 50px 0px 50px", justifyItems: "center"}}>
-            <ContentCard  color="#f0f0f0">
+            <ContentCard color="#f0f0f0">
                 <LoginForm />
             </ContentCard>
             </Box>

@@ -11,4 +11,6 @@ public class UserFileDTO
     public UserDTO User { get; set; } = default!;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
+    public AssignmentAddDTO Assignment { get; set; } = default!;
 }

@@ -177,7 +177,8 @@ public static class WebApplicationBuilderExtensions
             .AddTransient<ISubjectService, SubjectService>()
             .AddTransient<IAssignmentService, AssignmentService>()
             .AddTransient<IStudentService, StudentService>()
-            .AddTransient<IProfessorService, ProfessorService>();
+            .AddTransient<IProfessorService, ProfessorService>()
+            .AddTransient<IFeedbackService, FeedbackService>();
 
         return builder;
     }

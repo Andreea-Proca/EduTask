@@ -1,12 +1,17 @@
 import { useIntl } from "react-intl";
-import { isUndefined } from "lodash";
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
+import { isUndefined, set } from "lodash";
+import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField } from "@mui/material";
 import { DataLoadingContainer } from "../../LoadingDisplay";
 import { useAssignmentTableController } from "./AssignmentTable.controller";
 import { AssignmentDTO } from "@infrastructure/apis/client";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { AssignmentAddDialog } from "../../Dialogs/AssignmentAddDialog";
+import { AssignmentEditDialog } from "../../Dialogs/AssignmentEditDialog";
 import { useAppSelector } from "@application/store";
+import { useDefaultDates } from "@mui/x-date-pickers/internals";
+import { UserFileAddDialog } from "../../Dialogs/UserFileAddDialog/UserFileAddDialog";
+import { useState } from "react";
 
 /**
  * This hook returns a header for the table with translated columns.
@@ -17,7 +22,8 @@ const useHeader = (): { key: keyof AssignmentDTO, name: string }[] => {
     return [
         { key: "title", name: formatMessage({ id: "globals.title" }) },
         { key: "description", name: formatMessage({ id: "globals.description" }) },
-        { key: "subject", name: formatMessage({ id: "globals.subject" }) }
+        { key: "subject", name: formatMessage({ id: "globals.subject" }) },
+        { key: "dueDate", name: formatMessage({ id: "globals.dueDate" }) }
     ]
 };
 
@@ -36,8 +42,9 @@ const getRowValues = (entries: AssignmentDTO[] | null | undefined, orderMap: { [
 
 const renders: { [key: string]: (value: any) => string | null } = {
      //createdAt: dateToDateStringOrNull,
-    subject: (value) => value.name
-};
+    subject: (value) => value.name,
+    dueDate: (value) => value.toString().substring(4, 21)
+};  
 
 /**
  * Creates the user table.
@@ -47,11 +54,34 @@ export const AssignmentTable = () => {
     const { formatMessage } = useIntl();
     const header = useHeader();
     const orderMap = header.reduce((acc, e, i) => { return { ...acc, [e.key]: i } }, {}) as { [key: string]: number }; // Get the header column order.
-    const { handleChangePage, handleChangePageSize, pagedData, isError, isLoading, tryReload, labelDisplay, remove } = useAssignmentTableController(); // Use the controller hook.
+    const { handleChangeSearch, handleChangePage, handleChangePageSize, pagedData, isError, isLoading, tryReload, labelDisplay, remove, update} = useAssignmentTableController(); // Use the controller hook.
     const rowValues = getRowValues(pagedData?.data, orderMap); // Get the row values.
 
+
+    const [searchText, setSearchText] = useState('');
+
+    // const filteredRowValues = rowValues?.filter(row => {
+    //     const values = row.data.map(data => data.value.toString());
+    //     const searchString = searchText.toLowerCase();
+    //     return values.some(value => value.toLowerCase().includes(searchString));
+    // });
+    
     return <DataLoadingContainer isError={isError} isLoading={isLoading} tryReload={tryReload}> {/* Wrap the table into the loading container because data will be fetched from the backend and is not immediately available.*/}
         <AssignmentAddDialog /> {/* Add the button to open the user add modal. */}
+
+        <br />
+        <div  style={{ display: 'flex', alignItems: 'center' }}>
+        <TextField
+                size="small"
+                variant="outlined" 
+                value={searchText}
+                onChange={(e) => {
+                    setSearchText(e.target.value);
+                    handleChangeSearch(e, e.target.value);
+                }}
+                placeholder={formatMessage({ id: "globals.search" })}
+            />
+        
         {!isUndefined(pagedData) && !isUndefined(pagedData?.totalCount) && !isUndefined(pagedData?.page) && !isUndefined(pagedData?.pageSize) &&
             <TablePagination // Use the table pagination to add the navigation between the table pages.
                 component="div"
@@ -65,6 +95,7 @@ export const AssignmentTable = () => {
                 showFirstButton
                 showLastButton
             />}
+            </div>
 
         <TableContainer component={Paper}>
             <Table>
@@ -84,6 +115,10 @@ export const AssignmentTable = () => {
                                 {entry.id !== ownAssignmentId && <IconButton color="error" onClick={() => remove(entry.id || '')}>
                                     <DeleteIcon color="error" fontSize='small' />
                                 </IconButton>}
+                                {entry.id !== ownAssignmentId &&  <AssignmentEditDialog id={entry.id ?? ''}/>}
+                            </TableCell>
+                            <TableCell> {/* Add other cells like action buttons. */}
+                                {<UserFileAddDialog id={entry.id ?? ''}/> }
                             </TableCell>
                         </TableRow>)
                     }

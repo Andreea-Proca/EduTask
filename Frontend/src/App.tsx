@@ -11,6 +11,7 @@ import { StudentsPage } from "@presentation/pages/StudentsPage";
 import { ProfessorsPage } from "@presentation/pages/ProfessorsPage";
 import { AssignmentsPage } from "@presentation/pages/AssignmentsPage";
 import { RegisterPage } from "@presentation/pages/RegisterPage";
+import { FeedbackPage } from "@presentation/pages/FeedbackPage";
 import { Route, Routes } from "react-router-dom";
 import { AppRoute } from "routes";
 
@@ -30,6 +31,7 @@ export function App() {
         {isAdmin && <Route path={AppRoute.Students} element={<StudentsPage/>} />}
         {isAdmin && <Route path={AppRoute.Professors} element={<ProfessorsPage/>} />}
         <Route path={AppRoute.Register} element={<RegisterPage/>} />
+        <Route path={AppRoute.Feedback} element={<FeedbackPage/>} />
       </Routes>
     </AppIntlProvider>
 }

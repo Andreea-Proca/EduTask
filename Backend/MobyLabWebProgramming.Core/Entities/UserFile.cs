@@ -18,4 +18,7 @@ public class UserFile : BaseEntity
     /// This is a navigation property for the ORM to correlate this entity with the entity that it references via the foreign key.
     /// </summary>
     public User User { get; set; } = default!;
+
+    public Guid AssignmentId { get; set; }
+    public Assignment Assignment { get; set; } = default!;
 }

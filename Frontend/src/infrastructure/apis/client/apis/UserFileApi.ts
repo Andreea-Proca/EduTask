@@ -28,6 +28,7 @@ import {
 export interface ApiUserFileAddPostRequest {
     file?: Blob;
     description?: string;
+    assignmentId?: string;
 }
 
 export interface ApiUserFileDownloadIdGetRequest {
@@ -78,6 +79,10 @@ export class UserFileApi extends runtime.BaseAPI {
 
         if (requestParameters.description !== undefined) {
             formParams.append('Description', requestParameters.description as any);
+        }
+
+        if (requestParameters.assignmentId !== undefined) {
+            formParams.append('AssignmentId', requestParameters.assignmentId as any);
         }
 
         const response = await this.request({

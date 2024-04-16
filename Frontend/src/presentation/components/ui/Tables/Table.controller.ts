@@ -5,19 +5,26 @@ import { useIntl } from "react-intl";
 /**
  * This is the pagination controller hook that can be used to manage the state of a table.
  */
-export const useTableController = (onPaginationChange: (page: number, pageSize: number) => void, defaultPageSize?: number) => {
+export const useTableController = (onPaginationChange: (search: string, page: number, pageSize: number) => void, defaultPageSize?: number) => {
     const { formatMessage } = useIntl();
     const handleChangePage = useCallback(( // Create a callback to listen on changes of the table page.
         _event: MouseEvent<HTMLButtonElement> | null,
         newPage: number,
     ) => {
-        onPaginationChange(newPage + 1, defaultPageSize ?? 10);
+        onPaginationChange("", newPage + 1, defaultPageSize ?? 10);
+    }, [onPaginationChange, defaultPageSize]);
+
+    const handleChangeSearch = useCallback(( // Create a callback to listen on changes of the table page.
+        _event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | null,
+        newSearch: string,
+    ) => {
+        onPaginationChange(newSearch, 1, defaultPageSize ?? 10);
     }, [onPaginationChange, defaultPageSize]);
 
     const handleChangePageSize = useCallback(( // Create a callback to listen on changes of the table page size.
         event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     ) => {
-        onPaginationChange(1, parseInt(event.target.value, 10)); // Reset the current page to 1 on page size change to avoid overflow.
+        onPaginationChange("", 1, parseInt(event.target.value, 10)); // Reset the current page to 1 on page size change to avoid overflow.
     }, [onPaginationChange]);
 
     const labelDisplay = useCallback(({ to, from, count }: LabelDisplayedRowsArgs) => { // Create a callback to display the paging labels with translations.
@@ -29,6 +36,7 @@ export const useTableController = (onPaginationChange: (page: number, pageSize: 
     return {
         labelDisplay,
         handleChangePage,
-        handleChangePageSize
+        handleChangePageSize,
+        handleChangeSearch
     };
 }

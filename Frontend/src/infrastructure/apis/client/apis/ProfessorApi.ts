@@ -16,6 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   ProfessorAddDTO,
+  ProfessorDTOListRequestResponse,
   ProfessorDTOPagedResponseRequestResponse,
   ProfessorDTORequestResponse,
   ProfessorUpdateDTO,
@@ -24,6 +25,8 @@ import type {
 import {
     ProfessorAddDTOFromJSON,
     ProfessorAddDTOToJSON,
+    ProfessorDTOListRequestResponseFromJSON,
+    ProfessorDTOListRequestResponseToJSON,
     ProfessorDTOPagedResponseRequestResponseFromJSON,
     ProfessorDTOPagedResponseRequestResponseToJSON,
     ProfessorDTORequestResponseFromJSON,
@@ -193,6 +196,34 @@ export class ProfessorApi extends runtime.BaseAPI {
      */
     async apiProfessorGetPageGet(requestParameters: ApiProfessorGetPageGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ProfessorDTOPagedResponseRequestResponse> {
         const response = await this.apiProfessorGetPageGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiProfessorGetProfessorsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ProfessorDTOListRequestResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/api/Professor/GetProfessors`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProfessorDTOListRequestResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiProfessorGetProfessorsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ProfessorDTOListRequestResponse> {
+        const response = await this.apiProfessorGetProfessorsGetRaw(initOverrides);
         return await response.value();
     }
 
