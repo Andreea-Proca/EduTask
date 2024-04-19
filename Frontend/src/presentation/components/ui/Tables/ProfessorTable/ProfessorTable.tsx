@@ -7,6 +7,7 @@ import { ProfessorDTO } from "@infrastructure/apis/client";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ProfessorAddDialog } from "../../Dialogs/ProfessorAddDialog";
 import { useAppSelector } from "@application/store";
+import { UserEditDialog } from "../../Dialogs/UserEditDialog/UserEditDialog";
 
 /**
  * This hook returns a header for the table with translated columns.
@@ -78,6 +79,7 @@ export const ProfessorTable = () => {
                                 {entry.id !== ownProfessorId && <IconButton color="error" onClick={() => remove(entry.id || '')}>
                                     <DeleteIcon color="error" fontSize='small' />
                                 </IconButton>}
+                                {entry.id !== ownProfessorId &&  <UserEditDialog id={entry.id ?? ''}/>}
                             </TableCell>
                         </TableRow>)
                     }

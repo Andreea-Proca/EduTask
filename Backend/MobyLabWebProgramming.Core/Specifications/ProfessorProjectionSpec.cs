@@ -17,6 +17,7 @@ namespace MobyLabWebProgramming.Core.Specifications
             Email = e.Email,
             Name = e.Name,
             Role = e.Role,
+            CreatedAt = e.CreatedAt,
             //Subjects = MapSubjectToDTO(e.Subjects)
         };
         private ICollection<SubjectDTO> MapSubjectToDTO(ICollection<Subject> subjects)

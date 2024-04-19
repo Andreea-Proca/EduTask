@@ -50,6 +50,12 @@ export interface UserDTO {
      * @memberof UserDTO
      */
     role?: UserRoleEnum;
+    /**
+     * 
+     * @type {Date}
+     * @memberof UserDTO
+     */
+    createdAt?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function UserDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): U
         'name': !exists(json, 'name') ? undefined : json['name'],
         'email': !exists(json, 'email') ? undefined : json['email'],
         'role': !exists(json, 'role') ? undefined : UserRoleEnumFromJSON(json['role']),
+        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
     };
 }
 
@@ -91,6 +98,7 @@ export function UserDTOToJSON(value?: UserDTO | null): any {
         'name': value.name,
         'email': value.email,
         'role': UserRoleEnumToJSON(value.role),
+        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
     };
 }
 

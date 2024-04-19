@@ -16,8 +16,9 @@ namespace MobyLabWebProgramming.Core.Specifications
             Email = e.Email,
             Name = e.Name,
             Role = e.Role,
-         /*   Subjects = MapSubjectToDTO(e.Subjects), // You might need to map Subjects to SubjectDTO here
-            UserFiles = MapUserFilesToDTO(e.UserFiles) // You might need to map UserFiles to UserFileDTO here*/
+            CreatedAt = e.CreatedAt,
+            /*   Subjects = MapSubjectToDTO(e.Subjects), // You might need to map Subjects to SubjectDTO here
+               UserFiles = MapUserFilesToDTO(e.UserFiles) // You might need to map UserFiles to UserFileDTO here*/
         };
 
         private ICollection<UserFileDTO> MapUserFilesToDTO(ICollection<UserFile> userFiles)

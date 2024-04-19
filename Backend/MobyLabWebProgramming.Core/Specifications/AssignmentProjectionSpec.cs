@@ -22,6 +22,7 @@ namespace MobyLabWebProgramming.Core.Specifications
                 Name = e.Subject.Name,
                 Description = e.Subject.Description
             },
+            CreatedAt = e.CreatedAt
             //SubjectId = e.SubjectId,
             //Subject = MapSubjectToDTO(e.Subject),
             // UserFiles = MapUserFilesToDTO(e.UserFiles)

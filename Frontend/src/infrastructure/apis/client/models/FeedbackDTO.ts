@@ -104,6 +104,12 @@ export interface FeedbackDTO {
      * @memberof FeedbackDTO
      */
     subjectId?: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof FeedbackDTO
+     */
+    createdAt?: Date;
 }
 
 /**
@@ -137,6 +143,7 @@ export function FeedbackDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'communication': !exists(json, 'communication') ? undefined : AmountEnumFromJSON(json['communication']),
         'subject': !exists(json, 'subject') ? undefined : SubjectFromJSON(json['subject']),
         'subjectId': !exists(json, 'subjectId') ? undefined : json['subjectId'],
+        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
     };
 }
 
@@ -161,6 +168,7 @@ export function FeedbackDTOToJSON(value?: FeedbackDTO | null): any {
         'communication': AmountEnumToJSON(value.communication),
         'subject': SubjectToJSON(value.subject),
         'subjectId': value.subjectId,
+        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
     };
 }
 

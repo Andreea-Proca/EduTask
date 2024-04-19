@@ -10,6 +10,8 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects
         public string? Description { get; set; }
 
         public ProfessorDTO Professor { get; set; }
+
+        public DateTime CreatedAt { get; set; }
         //public Guid ProfessorId { get; set; }
         /*        public ICollection<AssignmentDTO> Assignments { get; set; } = new List<AssignmentDTO>();
                 public ProfessorDTO Professor { get; set; }

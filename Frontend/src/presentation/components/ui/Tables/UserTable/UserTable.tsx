@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 import { isUndefined } from "lodash";
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
+import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField } from "@mui/material";
 import { DataLoadingContainer } from "../../LoadingDisplay";
 import { useUserTableController } from "./UserTable.controller";
 import { UserDTO } from "@infrastructure/apis/client";
@@ -8,6 +8,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { UserAddDialog } from "../../Dialogs/UserAddDialog";
 import { useAppSelector } from "@application/store";
 import { UserEditDialog } from "../../Dialogs/UserEditDialog/UserEditDialog";
+import { useState } from "react";
+import { dateToDateStringOrNull } from "@infrastructure/utils/dateUtils";
 
 /**
  * This hook returns a header for the table with translated columns.
@@ -18,7 +20,8 @@ const useHeader = (): { key: keyof UserDTO, name: string }[] => {
     return [
         { key: "name", name: formatMessage({ id: "globals.name" }) },
         { key: "email", name: formatMessage({ id: "globals.email" }) },
-        { key: "role", name: formatMessage({ id: "globals.role" }) }
+        { key: "role", name: formatMessage({ id: "globals.role" }) },
+        { key: "createdAt", name: formatMessage({ id: "globals.createdAt" }) }
     ]
 };
 
@@ -34,6 +37,10 @@ const getRowValues = (entries: UserDTO[] | null | undefined, orderMap: { [key: s
             }
         });
 
+const renders: { [key: string]: (value: any) => string | null } = {
+    createdAt: dateToDateStringOrNull,
+};
+        
 /**
  * Creates the user table.
  */
@@ -42,11 +49,25 @@ export const UserTable = () => {
     const { formatMessage } = useIntl();
     const header = useHeader();
     const orderMap = header.reduce((acc, e, i) => { return { ...acc, [e.key]: i } }, {}) as { [key: string]: number }; // Get the header column order.
-    const { handleChangePage, handleChangePageSize, pagedData, isError, isLoading, tryReload, labelDisplay, remove } = useUserTableController(); // Use the controller hook.
+    const { handleChangeSearch, handleChangePage, handleChangePageSize, pagedData, isError, isLoading, tryReload, labelDisplay, remove } = useUserTableController(); // Use the controller hook.
     const rowValues = getRowValues(pagedData?.data, orderMap); // Get the row values.
+
+    const [searchText, setSearchText] = useState('');
 
     return <DataLoadingContainer isError={isError} isLoading={isLoading} tryReload={tryReload}> {/* Wrap the table into the loading container because data will be fetched from the backend and is not immediately available.*/}
         <UserAddDialog /> {/* Add the button to open the user add modal. */}
+        
+        <div  style={{ display: 'flex', alignItems: 'center' }}>
+        <TextField
+                size="small"
+                variant="outlined" 
+                value={searchText}
+                onChange={(e) => {
+                    setSearchText(e.target.value);
+                    handleChangeSearch(e, e.target.value);
+                }}
+                placeholder={formatMessage({ id: "globals.search" })}
+            />
         {!isUndefined(pagedData) && !isUndefined(pagedData?.totalCount) && !isUndefined(pagedData?.page) && !isUndefined(pagedData?.pageSize) &&
             <TablePagination // Use the table pagination to add the navigation between the table pages.
                 component="div"
@@ -60,6 +81,7 @@ export const UserTable = () => {
                 showFirstButton
                 showLastButton
             />}
+        </div>
 
         <TableContainer component={Paper}>
             <Table>
@@ -74,7 +96,7 @@ export const UserTable = () => {
                 <TableBody>
                     {
                         rowValues?.map(({ data, entry }, rowIndex) => <TableRow key={`row_${rowIndex + 1}`}>
-                            {data.map((keyValue, index) => <TableCell key={`cell_${rowIndex + 1}_${index + 1}`}>{keyValue.value}</TableCell>)} {/* Add the row values. */}
+                            {data.map((keyValue, index) => <TableCell key={`cell_${rowIndex + 1}_${index + 1}`}>{isUndefined(renders[keyValue.key]) ? keyValue.value : renders[keyValue.key](keyValue.value)}</TableCell>)} {/* Add the row values. */}
                             <TableCell> {/* Add other cells like action buttons. */}
                                 {entry.id !== ownUserId && <IconButton color="error" onClick={() => remove(entry.id || '')}>
                                     <DeleteIcon color="error" fontSize='small' />

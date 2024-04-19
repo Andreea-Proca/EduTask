@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 import { isUndefined } from "lodash";
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
+import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField } from "@mui/material";
 import { DataLoadingContainer } from "../../LoadingDisplay";
 import { useUserFileTableController } from "./UserFileTable.controller";
 import { UserFileDTO } from "@infrastructure/apis/client";
@@ -8,6 +8,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import { dateToDateStringOrNull } from "@infrastructure/utils/dateUtils";
 import { UserFileAddDialog } from "../../Dialogs/UserFileAddDialog";
+import { useState } from "react";
 
 /**
  * This hook returns a header for the table with translated columns.
@@ -19,6 +20,7 @@ const useHeader = (): { key: keyof UserFileDTO, name: string }[] => {
         { key: "name", name: formatMessage({ id: "globals.name" }) },
         { key: "description", name: formatMessage({ id: "globals.description" }) },
         { key: "user", name: formatMessage({ id: "globals.addBy" }) },
+        { key: "assignment", name: formatMessage({ id: "globals.addFor" }) },
         { key: "createdAt", name: formatMessage({ id: "globals.createdAt" }) }
     ]
 };
@@ -40,7 +42,8 @@ const getRowValues = (entries: UserFileDTO[] | null | undefined, orderMap: { [ke
  */
 const renders: { [key: string]: (value: any) => string | null } = {
     createdAt: dateToDateStringOrNull,
-    user: (value) => value.name
+    user: (value) => value.name,
+    assignment: (value) => value.title
 };
 
 /**
@@ -50,11 +53,26 @@ export const UserFileTable = () => {
     const { formatMessage } = useIntl();
     const header = useHeader();
     const orderMap = header.reduce((acc, e, i) => { return { ...acc, [e.key]: i } }, {}) as { [key: string]: number }; // Get the header column order.
-    const { handleChangePage, handleChangePageSize, pagedData, isError, isLoading, tryReload, labelDisplay, downloadUserFile, openUserFile } = useUserFileTableController(); // Use the controller hook.
+    const {handleChangeSearch, handleChangePage, handleChangePageSize, pagedData, isError, isLoading, tryReload, labelDisplay, downloadUserFile, openUserFile } = useUserFileTableController(); // Use the controller hook.
     const rowValues = getRowValues(pagedData?.data, orderMap); // Get the row values.
 
+    const [searchText, setSearchText] = useState('');
+
     return <DataLoadingContainer isError={isError} isLoading={isLoading} tryReload={tryReload}> {/* Wrap the table into the loading container because data will be fetched from the backend and is not immediately available.*/}
-        <UserFileAddDialog />  {/* Add the button to open the user file add modal. */}
+        {/* <UserFileAddDialog />  Add the button to open the user file add modal. */}
+        
+        <div  style={{ display: 'flex', alignItems: 'center' }}>
+        <TextField
+                size="small"
+                variant="outlined" 
+                value={searchText}
+                onChange={(e) => {
+                    setSearchText(e.target.value);
+                    handleChangeSearch(e, e.target.value);
+                }}
+                placeholder={formatMessage({ id: "globals.search" })}
+            />
+
         {!isUndefined(pagedData) && !isUndefined(pagedData?.totalCount) && !isUndefined(pagedData?.page) && !isUndefined(pagedData?.pageSize) &&
             <TablePagination // Use the table pagination to add the navigation between the table pages.
                 component="div"
@@ -68,6 +86,7 @@ export const UserFileTable = () => {
                 showFirstButton
                 showLastButton
             />}
+        </div>
 
         <TableContainer component={Paper}>
             <Table>

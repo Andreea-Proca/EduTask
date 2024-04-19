@@ -12,6 +12,7 @@ import { useAppSelector } from "@application/store";
 import { useDefaultDates } from "@mui/x-date-pickers/internals";
 import { UserFileAddDialog } from "../../Dialogs/UserFileAddDialog/UserFileAddDialog";
 import { useState } from "react";
+import { dateToDateStringOrNull, dateToDatetimeString } from "@infrastructure/utils/dateUtils";
 
 /**
  * This hook returns a header for the table with translated columns.
@@ -22,6 +23,7 @@ const useHeader = (): { key: keyof AssignmentDTO, name: string }[] => {
     return [
         { key: "title", name: formatMessage({ id: "globals.title" }) },
         { key: "description", name: formatMessage({ id: "globals.description" }) },
+        { key: "createdAt", name: formatMessage({ id: "globals.createdAt" }) },
         { key: "subject", name: formatMessage({ id: "globals.subject" }) },
         { key: "dueDate", name: formatMessage({ id: "globals.dueDate" }) }
     ]
@@ -41,9 +43,10 @@ const getRowValues = (entries: AssignmentDTO[] | null | undefined, orderMap: { [
 
 
 const renders: { [key: string]: (value: any) => string | null } = {
-     //createdAt: dateToDateStringOrNull,
+    createdAt: dateToDateStringOrNull,
     subject: (value) => value.name,
-    dueDate: (value) => value.toString().substring(4, 21)
+    dueDate: (value) => value.toString().substring(4, 21),
+   
 };  
 
 /**

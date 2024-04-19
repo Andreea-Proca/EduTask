@@ -11,5 +11,7 @@ public class ProfessorDTO
     public string Name { get; set; }
     public string Email { get; set; }
     public UserRoleEnum Role { get; set; }
-   // public ICollection<SubjectDTO> Subjects { get; set; } = new List<SubjectDTO>();
+
+    public DateTime CreatedAt { get; set; }
+    // public ICollection<SubjectDTO> Subjects { get; set; } = new List<SubjectDTO>();
 }

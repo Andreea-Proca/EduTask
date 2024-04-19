@@ -22,10 +22,10 @@ const getFileContent = (filename?: string) => {
 export const useUserFileTableController = () => {
     const { getUserFiles: { key: queryKey, query }, downloadUserFile: { query: download } } = useUserFileApi(); // Use the API hook.
     const queryClient = useQueryClient(); // Get the query client.
-    const { page, pageSize, setPagination } = usePaginationController(); // Get the pagination state.
+    const {  search, page, pageSize, setPagination } = usePaginationController(); // Get the pagination state.
     const { data, isError, isLoading } = useQuery({
-        queryKey: [queryKey, page, pageSize],
-        queryFn: () => query({ page, pageSize })
+        queryKey: [queryKey,  search, page, pageSize],
+        queryFn: () => query({  search, page, pageSize })
     }); // Retrieve the table page from the backend via the query hook.
     const downloadUserFile = useCallback((userFile: UserFileDTO) => download(userFile.id ?? '')
         .then((data) => downloadDocument(data, userFile.name ?? '')), [download]); // Create the callback to download the user file.

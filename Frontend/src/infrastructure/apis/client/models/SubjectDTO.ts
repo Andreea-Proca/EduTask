@@ -50,6 +50,12 @@ export interface SubjectDTO {
      * @memberof SubjectDTO
      */
     professor?: ProfessorDTO;
+    /**
+     * 
+     * @type {Date}
+     * @memberof SubjectDTO
+     */
+    createdAt?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function SubjectDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'name': !exists(json, 'name') ? undefined : json['name'],
         'description': !exists(json, 'description') ? undefined : json['description'],
         'professor': !exists(json, 'professor') ? undefined : ProfessorDTOFromJSON(json['professor']),
+        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
     };
 }
 
@@ -91,6 +98,7 @@ export function SubjectDTOToJSON(value?: SubjectDTO | null): any {
         'name': value.name,
         'description': value.description,
         'professor': ProfessorDTOToJSON(value.professor),
+        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
     };
 }
 

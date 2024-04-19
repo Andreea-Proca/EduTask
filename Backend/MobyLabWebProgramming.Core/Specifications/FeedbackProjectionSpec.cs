@@ -31,6 +31,7 @@ namespace MobyLabWebProgramming.Core.Specifications
                 Name = e.Subject.Name,
                 Description = e.Subject.Description
             },
+            CreatedAt = e.CreatedAt
         };
 
         public FeedbackProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)

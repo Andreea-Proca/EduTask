@@ -62,6 +62,12 @@ export interface AssignmentDTO {
      * @memberof AssignmentDTO
      */
     subject?: SubjectDTO;
+    /**
+     * 
+     * @type {Date}
+     * @memberof AssignmentDTO
+     */
+    createdAt?: Date;
 }
 
 /**
@@ -89,6 +95,7 @@ export function AssignmentDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'dueDate': !exists(json, 'dueDate') ? undefined : (new Date(json['dueDate'])),
         'subjectId': !exists(json, 'subjectId') ? undefined : json['subjectId'],
         'subject': !exists(json, 'subject') ? undefined : SubjectDTOFromJSON(json['subject']),
+        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
     };
 }
 
@@ -107,6 +114,7 @@ export function AssignmentDTOToJSON(value?: AssignmentDTO | null): any {
         'dueDate': value.dueDate === undefined ? undefined : (value.dueDate.toISOString()),
         'subjectId': value.subjectId,
         'subject': SubjectDTOToJSON(value.subject),
+        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
     };
 }
 

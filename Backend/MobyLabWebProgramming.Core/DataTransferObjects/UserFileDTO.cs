@@ -12,5 +12,5 @@ public class UserFileDTO
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    public AssignmentAddDTO Assignment { get; set; } = default!;
+    public AssignmentDTO Assignment { get; set; } = default!;
 }

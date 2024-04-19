@@ -22,6 +22,7 @@ namespace MobyLabWebProgramming.Core.Specifications
                 Name = e.Professor.Name,
                 Role = e.Professor.Role
             },
+            CreatedAt = e.CreatedAt,
             // Assignments = MapAssignmentToDTO(e.Assignments), // You might need to map Assignments to AssignmentDTO here
             // Professor = MapProfessorToDTO(e.Professor), // You might need to map Professor to ProfessorDTO here
             // ProfessorId = e.ProfessorId,

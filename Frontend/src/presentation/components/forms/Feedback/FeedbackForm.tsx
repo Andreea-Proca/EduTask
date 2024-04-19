@@ -209,7 +209,7 @@ export const FeedbackForm = (props: { onSubmit?: () => void }) => {
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
                                 <Rating
                                     {...actions.register("rating")}
-                                    //value={actions.watch("rating")}
+                                    value={actions.watch("rating")}
                                     onChange={(event) => {
                                         actions.selectRating;
                                         actions.register("rating").onChange(event);

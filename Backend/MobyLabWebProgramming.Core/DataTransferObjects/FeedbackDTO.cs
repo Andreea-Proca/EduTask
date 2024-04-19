@@ -22,5 +22,7 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects
         public AmountEnum Communication { get; set; } = default!; // select
         public Subject Subject { get; set; } = default!; // select
         public Guid SubjectId { get; set; } = default!;
-    }
+
+        public DateTime CreatedAt { get; set; }
+}
 }

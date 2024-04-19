@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { AssignmentAddDTO } from './AssignmentAddDTO';
+import type { AssignmentDTO } from './AssignmentDTO';
 import {
-    AssignmentAddDTOFromJSON,
-    AssignmentAddDTOFromJSONTyped,
-    AssignmentAddDTOToJSON,
-} from './AssignmentAddDTO';
+    AssignmentDTOFromJSON,
+    AssignmentDTOFromJSONTyped,
+    AssignmentDTOToJSON,
+} from './AssignmentDTO';
 import type { UserDTO } from './UserDTO';
 import {
     UserDTOFromJSON,
@@ -70,10 +70,10 @@ export interface UserFileDTO {
     updatedAt?: Date;
     /**
      * 
-     * @type {AssignmentAddDTO}
+     * @type {AssignmentDTO}
      * @memberof UserFileDTO
      */
-    assignment?: AssignmentAddDTO;
+    assignment?: AssignmentDTO;
 }
 
 /**
@@ -101,7 +101,7 @@ export function UserFileDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'user': !exists(json, 'user') ? undefined : UserDTOFromJSON(json['user']),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
-        'assignment': !exists(json, 'assignment') ? undefined : AssignmentAddDTOFromJSON(json['assignment']),
+        'assignment': !exists(json, 'assignment') ? undefined : AssignmentDTOFromJSON(json['assignment']),
     };
 }
 
@@ -120,7 +120,7 @@ export function UserFileDTOToJSON(value?: UserFileDTO | null): any {
         'user': UserDTOToJSON(value.user),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
-        'assignment': AssignmentAddDTOToJSON(value.assignment),
+        'assignment': AssignmentDTOToJSON(value.assignment),
     };
 }
 

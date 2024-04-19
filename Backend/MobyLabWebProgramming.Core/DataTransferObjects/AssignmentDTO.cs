@@ -11,6 +11,8 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects
         public DateTime DueDate { get; set; }
         public Guid SubjectId { get; set; }
         public SubjectDTO Subject { get; set; }
-       // public ICollection<UserFileDTO>? UserFiles { get; set; } = new List<UserFileDTO>();
+
+        public DateTime CreatedAt { get; set; }
+        // public ICollection<UserFileDTO>? UserFiles { get; set; } = new List<UserFileDTO>();
     }
 }

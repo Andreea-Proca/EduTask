@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 import { isUndefined } from "lodash";
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
+import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField } from "@mui/material";
 import { DataLoadingContainer } from "../../LoadingDisplay";
 import { useSubjectTableController } from "./SubjectTable.controller";
 import { SubjectDTO } from "@infrastructure/apis/client";
@@ -8,6 +8,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { SubjectAddDialog } from "../../Dialogs/SubjectAddDialog";
 import { SubjectEditDialog } from "../../Dialogs/SubjectEditDialog";
 import { useAppSelector } from "@application/store";
+import { useState } from "react";
+import { dateToDateStringOrNull } from "@infrastructure/utils/dateUtils";
 
 /**
  * This hook returns a header for the table with translated columns.
@@ -18,6 +20,7 @@ const useHeader = (): { key: keyof SubjectDTO, name: string }[] => {
     return [
         { key: "name", name: formatMessage({ id: "globals.name" }) },
         { key: "description", name: formatMessage({ id: "globals.description" }) },
+        { key: "createdAt", name: formatMessage({ id: "globals.createdAt" }) },
         { key: "professor", name: formatMessage({ id: "globals.professor" }) }
     ]
 };
@@ -35,8 +38,8 @@ const getRowValues = (entries: SubjectDTO[] | null | undefined, orderMap: { [key
         });
 
 const renders: { [key: string]: (value: any) => string | null } = {
-    //createdAt: dateToDateStringOrNull,
-    professor: (value) => value.name
+    professor: (value) => value.name, 
+    createdAt: dateToDateStringOrNull,
 };
 
 /**
@@ -47,11 +50,27 @@ export const SubjectTable = () => {
     const { formatMessage } = useIntl();
     const header = useHeader();
     const orderMap = header.reduce((acc, e, i) => { return { ...acc, [e.key]: i } }, {}) as { [key: string]: number }; // Get the header column order.
-    const { handleChangePage, handleChangePageSize, pagedData, isError, isLoading, tryReload, labelDisplay, remove } = useSubjectTableController(); // Use the controller hook.
+    const { handleChangeSearch, handleChangePage, handleChangePageSize, pagedData, isError, isLoading, tryReload, labelDisplay, remove } = useSubjectTableController(); // Use the controller hook.
     const rowValues = getRowValues(pagedData?.data, orderMap); // Get the row values.
+
+    const [searchText, setSearchText] = useState('');
 
     return <DataLoadingContainer isError={isError} isLoading={isLoading} tryReload={tryReload}> {/* Wrap the table into the loading container because data will be fetched from the backend and is not immediately available.*/}
         <SubjectAddDialog /> {/* Add the button to open the user add modal. */}
+        
+        <br />
+        <div  style={{ display: 'flex', alignItems: 'center' }}>
+        <TextField
+                size="small"
+                variant="outlined" 
+                value={searchText}
+                onChange={(e) => {
+                    setSearchText(e.target.value);
+                    handleChangeSearch(e, e.target.value);
+                }}
+                placeholder={formatMessage({ id: "globals.search" })}
+            />
+        
         {!isUndefined(pagedData) && !isUndefined(pagedData?.totalCount) && !isUndefined(pagedData?.page) && !isUndefined(pagedData?.pageSize) &&
             <TablePagination // Use the table pagination to add the navigation between the table pages.
                 component="div"
@@ -65,6 +84,7 @@ export const SubjectTable = () => {
                 showFirstButton
                 showLastButton
             />}
+        </div>
 
         <TableContainer component={Paper}>
             <Table>

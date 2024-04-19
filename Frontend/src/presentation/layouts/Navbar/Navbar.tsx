@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { SetStateAction, useCallback, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,12 +8,13 @@ import { Link } from 'react-router-dom';
 import { AppRoute } from 'routes';
 import { useIntl } from 'react-intl';
 import { useAppDispatch, useAppSelector } from '@application/store';
-import { Grid } from '@mui/material';
+import { ClickAwayListener, Grid, Grow, Menu, MenuItem, MenuList, Paper, Popper } from '@mui/material';
 import { resetProfile } from '@application/state-slices';
 import { useAppRouter } from '@infrastructure/hooks/useAppRouter';
 import { NavbarLanguageSelector } from '@presentation/components/ui/NavbarLanguageSelector/NavbarLanguageSelector';
 import { useOwnUserHasRole } from '@infrastructure/hooks/useOwnUser';
 import { UserRoleEnum } from '@infrastructure/apis/client';
+import React from 'react';
 
 /**
  * This is the navigation menu that will stay at the top of the page.
@@ -28,6 +29,43 @@ export const Navbar = () => {
     dispatch(resetProfile());
     redirectToHome();
   }, [dispatch, redirectToHome]);
+
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLButtonElement>(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event: Event | React.SyntheticEvent) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event: React.KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === 'Escape') {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current!.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
 
   return <Box sx={{ flexGrow: 1 }}>
     <AppBar>
@@ -57,13 +95,62 @@ export const Navbar = () => {
               wrap="nowrap"
               columnSpacing={15}
             >
+
               <Grid container item direction="column" xs={1}>
-                <Button color="inherit">
-                  <Link style={{ color: 'white' }} to={AppRoute.Users}>
-                    {formatMessage({ id: "globals.users" })}
-                  </Link>
-                </Button>
+                <div>
+                  <Button
+                    ref={anchorRef}
+                    id="composition-button"
+                    aria-controls={open ? 'composition-menu' : undefined}
+                    aria-expanded={open ? 'true' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleToggle}
+                    style={{ color: 'white' }}
+                  >
+                   {formatMessage({ id: "globals.users" })}
+                  </Button>
+                  <Popper
+                    open={open}
+                    anchorEl={anchorRef.current}
+                    role={undefined}
+                    placement="bottom-start"
+                    transition
+                    disablePortal
+                  >
+                    {({ TransitionProps, placement }) => (
+                      <Grow
+                        {...TransitionProps}
+                        style={{
+                          transformOrigin:
+                            placement === 'bottom-start' ? 'left top' : 'left bottom',
+                        }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList
+                              autoFocusItem={open}
+                              id="composition-menu"
+                              aria-labelledby="composition-button"
+                              onKeyDown={handleListKeyDown}
+                            >
+                              <MenuItem onClick={handleClose}><Link style={{ color: 'black' }} to={AppRoute.Users}>
+                                {formatMessage({ id: "globals.users" })}
+                              </Link></MenuItem>
+                              <MenuItem onClick={handleClose}><Link style={{ color: 'black' }} to={AppRoute.Students}>
+                                {formatMessage({ id: "globals.students" })}
+                              </Link></MenuItem>
+                              <MenuItem onClick={handleClose}><Link style={{ color: 'black' }} to={AppRoute.Professors}>
+                                {formatMessage({ id: "globals.professors" })}
+                              </Link></MenuItem>
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+                      </Grow>
+                    )}
+                  </Popper>
+                </div>
               </Grid>
+
               <Grid container item direction="column" xs={1}>
                 <Button color="inherit">
                   <Link style={{ color: 'white' }} to={AppRoute.UserFiles}>
@@ -82,20 +169,6 @@ export const Navbar = () => {
                 <Button color="inherit">
                   <Link style={{ color: 'white' }} to={AppRoute.Assignments}>
                     {formatMessage({ id: "globals.assignments" })}
-                  </Link>
-                </Button>
-              </Grid>
-              <Grid container item direction="column" xs={1}>
-                <Button color="inherit">
-                  <Link style={{ color: 'white' }} to={AppRoute.Students}>
-                    {formatMessage({ id: "globals.students" })}
-                  </Link>
-                </Button>
-              </Grid>
-              <Grid container item direction="column" xs={1}>
-                <Button color="inherit">
-                  <Link style={{ color: 'white' }} to={AppRoute.Professors}>
-                    {formatMessage({ id: "globals.professors" })}
                   </Link>
                 </Button>
               </Grid>

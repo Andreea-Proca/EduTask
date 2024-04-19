@@ -10,10 +10,10 @@ import { usePaginationController } from "../Pagination.controller";
 export const useSubjectTableController = () => {
     const { getSubjects: { key: queryKey, query }, deleteSubject: { key: deleteSubjectKey, mutation: deleteSubject } } = useSubjectApi(); // Use the API hook.
     const queryClient = useQueryClient(); // Get the query client.
-    const { page, pageSize, setPagination } = usePaginationController(); // Get the pagination state.
+    const {  search, page, pageSize, setPagination } = usePaginationController(); // Get the pagination state.
     const { data, isError, isLoading } = useQuery({
-        queryKey: [queryKey, page, pageSize],
-        queryFn: () => query({ page, pageSize })
+        queryKey: [queryKey, search, page, pageSize],
+        queryFn: () => query({  search, page, pageSize })
     }); // Retrieve the table page from the backend via the query hook.
     const { mutateAsync: deleteMutation } = useMutation({
         mutationKey: [deleteSubjectKey],
