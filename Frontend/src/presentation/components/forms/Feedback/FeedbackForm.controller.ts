@@ -220,11 +220,12 @@ export const useFeedbackFormController = (onSubmit?: () => void): FeedbackFormCo
         console.log(event.target.value);
     }, [setValue]);
 
-    const selectRating = useCallback((event: SelectChangeEvent<number>) => { // Select inputs are tricky and may need their on callbacks to set the values.
-        setValue("rating", event.target.value as number, {
+    const selectRating = useCallback((newValue: number) => { // Select inputs are tricky and may need their on callbacks to set the values.
+        console.log(newValue);
+        setValue("rating", newValue as number, {
             shouldValidate: true,
         });
-        console.log(event.target.value);
+        //console.log(event.target.value);
     }, [setValue]);
 
     const selectAttendance = useCallback((event: SelectChangeEvent<number>) => { // Select inputs are tricky and may need their on callbacks to set the values.

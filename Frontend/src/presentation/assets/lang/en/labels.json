@@ -8,5 +8,6 @@
     "labels.addUser": "Add user",
     "labels.addUserFile": "Add file",
     "labels.addSubject": "Add subject",
-    "labels.addAssignment": "Add assignment"
+    "labels.addAssignment": "Add assignment",
+    "labels.addSolution": "Add solution"
 }

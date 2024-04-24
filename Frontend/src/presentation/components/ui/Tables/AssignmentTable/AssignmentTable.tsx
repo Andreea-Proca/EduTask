@@ -3,7 +3,7 @@ import { isUndefined, set } from "lodash";
 import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField } from "@mui/material";
 import { DataLoadingContainer } from "../../LoadingDisplay";
 import { useAssignmentTableController } from "./AssignmentTable.controller";
-import { AssignmentDTO } from "@infrastructure/apis/client";
+import { AssignmentDTO, UserRoleEnum } from "@infrastructure/apis/client";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { AssignmentAddDialog } from "../../Dialogs/AssignmentAddDialog";
@@ -13,6 +13,7 @@ import { useDefaultDates } from "@mui/x-date-pickers/internals";
 import { UserFileAddDialog } from "../../Dialogs/UserFileAddDialog/UserFileAddDialog";
 import { useState } from "react";
 import { dateToDateStringOrNull, dateToDatetimeString } from "@infrastructure/utils/dateUtils";
+import { useOwnUserHasRole } from "@infrastructure/hooks/useOwnUser";
 
 /**
  * This hook returns a header for the table with translated columns.
@@ -68,9 +69,13 @@ export const AssignmentTable = () => {
     //     const searchString = searchText.toLowerCase();
     //     return values.some(value => value.toLowerCase().includes(searchString));
     // });
+
+    const isAdmin = useOwnUserHasRole(UserRoleEnum.Admin);
+    const isProf = useOwnUserHasRole(UserRoleEnum.Professor);
+    const isStudent = useOwnUserHasRole(UserRoleEnum.Student);
     
     return <DataLoadingContainer isError={isError} isLoading={isLoading} tryReload={tryReload}> {/* Wrap the table into the loading container because data will be fetched from the backend and is not immediately available.*/}
-        <AssignmentAddDialog /> {/* Add the button to open the user add modal. */}
+         {!isStudent && <AssignmentAddDialog />}
 
         <br />
         <div  style={{ display: 'flex', alignItems: 'center' }}>
@@ -108,19 +113,20 @@ export const AssignmentTable = () => {
                             header.map(e => <TableCell key={`header_${String(e.key)}`}>{e.name}</TableCell>) // Add the table header.
                         }
                         <TableCell>{formatMessage({ id: "labels.actions" })}</TableCell> {/* Add additional header columns if needed. */}
+                        <TableCell>{formatMessage({ id: "labels.addSolution" })}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {
                         rowValues?.map(({ data, entry }, rowIndex) => <TableRow key={`row_${rowIndex + 1}`}>
                             {data.map((keyValue, index) => <TableCell key={`cell_${rowIndex + 1}_${index + 1}`}>{isUndefined(renders[keyValue.key]) ? keyValue.value : renders[keyValue.key](keyValue.value)}</TableCell>)} {/* Add the row values. */}
-                            <TableCell> {/* Add other cells like action buttons. */}
+                            <TableCell>
                                 {entry.id !== ownAssignmentId && <IconButton color="error" onClick={() => remove(entry.id || '')}>
                                     <DeleteIcon color="error" fontSize='small' />
                                 </IconButton>}
                                 {entry.id !== ownAssignmentId &&  <AssignmentEditDialog id={entry.id ?? ''}/>}
                             </TableCell>
-                            <TableCell> {/* Add other cells like action buttons. */}
+                            <TableCell>
                                 {<UserFileAddDialog id={entry.id ?? ''}/> }
                             </TableCell>
                         </TableRow>)

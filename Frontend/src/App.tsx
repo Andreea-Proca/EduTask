@@ -12,11 +12,13 @@ import { ProfessorsPage } from "@presentation/pages/ProfessorsPage";
 import { AssignmentsPage } from "@presentation/pages/AssignmentsPage";
 import { RegisterPage } from "@presentation/pages/RegisterPage";
 import { FeedbackPage } from "@presentation/pages/FeedbackPage";
+import { FeedbackListPage } from "@presentation/pages/FeedbackListPage";
 import { Route, Routes } from "react-router-dom";
 import { AppRoute } from "routes";
 
 export function App() {
   const isAdmin = useOwnUserHasRole(UserRoleEnum.Admin);
+  const isProf= useOwnUserHasRole(UserRoleEnum.Professor);
 
   return <AppIntlProvider> {/* AppIntlProvider provides the functions to search the text after the provides string ids. */}
       <ToastNotifier />
@@ -25,9 +27,10 @@ export function App() {
         <Route path={AppRoute.Index} element={<HomePage />} /> {/* Add a new route with a element as the page. */}
         <Route path={AppRoute.Login} element={<LoginPage />} />
         {isAdmin && <Route path={AppRoute.Users} element={<UsersPage />} />} {/* If the user doesn't have the right role this route shouldn't be used. */}
-        {isAdmin && <Route path={AppRoute.UserFiles} element={<UserFilesPage />} />}
-        {isAdmin && <Route path={AppRoute.Subjects} element={<SubjectsPage />} />}
-        {isAdmin && <Route path={AppRoute.Assignments} element={<AssignmentsPage/>} />}
+        {(isAdmin || isProf) && <Route path={AppRoute.UserFiles} element={<UserFilesPage />} />}
+        {(isAdmin || isProf) && <Route path={AppRoute.FeedbackList} element={<FeedbackListPage />} />}
+        { <Route path={AppRoute.Subjects} element={<SubjectsPage />} />}
+        { <Route path={AppRoute.Assignments} element={<AssignmentsPage/>} />}
         {isAdmin && <Route path={AppRoute.Students} element={<StudentsPage/>} />}
         {isAdmin && <Route path={AppRoute.Professors} element={<ProfessorsPage/>} />}
         <Route path={AppRoute.Register} element={<RegisterPage/>} />

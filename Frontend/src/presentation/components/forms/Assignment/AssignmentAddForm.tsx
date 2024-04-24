@@ -18,18 +18,12 @@ import { isEmpty, isUndefined, set } from "lodash";
 import { AmountEnum } from "@infrastructure/apis/client";
 import "presentation/assets/lang";
 import { ContentCard } from "@presentation/components/ui/ContentCard";
-import PropTypes from 'prop-types';
-import { duration, styled } from '@mui/material/styles';
-import { useRadioGroup } from '@mui/material/RadioGroup';
-import { useAssignmentApi } from "@infrastructure/apis/api-management/assignment";
-import { useEffect, useState } from "react";
 import { useSubjectController } from "./Subject.controller";
-import { is } from "@infrastructure/utils/typeUtils";
 
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-//import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs, { Dayjs } from 'dayjs';
+import { DateTimePicker } from "@mui/x-date-pickers";
 
 
 /**
@@ -39,21 +33,21 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 export const AssignmentAddForm = (props: { onSubmit?: () => void }) => {
     const { formatMessage } = useIntl();
 
-    const [value, setValue] = React.useState<Date | null>(new Date());
 
-    var dueDate = new Date();
-
-    const handleChange = (newValue: Date | null) => {
-        setValue(newValue);
-        console.log("dnew valueeeee: " + newValue);
-        if (newValue)
-            dueDate =new Date( newValue);
-        console.log("dueeeee" + dueDate);
-    };
-
-    const { state, actions, computed } = useAssignmentAddFormController(props.onSubmit, dueDate); // Use the controller.
+    const { state, actions, computed } = useAssignmentAddFormController(props.onSubmit); // Use the controller.
 
     const { allSubjectsData, isError, isLoading } = useSubjectController();
+
+    const [value, setValue] = React.useState<Dayjs | null>(
+        dayjs(Date.now()),
+      );
+    
+      const handleChange = (newValue: Dayjs | null) => {
+        console.log("newValue: ", newValue);
+        setValue(newValue);
+        if(newValue !== null && newValue !== undefined)
+            actions.selectDate(newValue.toDate());
+      };
 
     return <form onSubmit={actions.handleSubmit(actions.submit)}> {/* Wrap your form into a form tag and use the handle submit callback to validate the form and call the data submission. */}
         <Stack spacing={4} style={{ width: "100%" }}>
@@ -197,26 +191,12 @@ export const AssignmentAddForm = (props: { onSubmit?: () => void }) => {
                                 <FormattedMessage id="globals.dueDate" />
                             </FormLabel>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DateTimePicker
-                            {...actions.register("dueDate")}
-                                label="Date&Time picker"
-                                value={value}
-                                onChange={handleChange}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                                    {/* <DatePicker
-                                        label="Controlled picker"
-                                        {...actions.register("dueDate")}
-                                        value={actions.watch("dueDate")}
-                                        onChange={(event) => {
-                                            if (event) {
-                                                actions.selectDate;
-                                                actions.register("dueDate").onChange(event);
-                                            }
-                                        }}
+                                    <DateTimePicker
+                                        value={value}
+                                        onChange={handleChange}
                                         renderInput={(params) => <TextField {...params} />}
-                                    /> */}
-                                </LocalizationProvider>
+                                    />
+                            </LocalizationProvider>
                             <FormHelperText
                                 hidden={isUndefined(state.errors.dueDate)}
                             >

@@ -39,7 +39,7 @@ export type FeedbackFormActions = {
     selectUnderstanding: (value: SelectChangeEvent<boolean>) => void;
     selectEngagement: (value: SelectChangeEvent<boolean>) => void;
     selectCompletion: (value: SelectChangeEvent<number>) => void;
-    selectRating: (value: SelectChangeEvent<number>) => void;
+    selectRating: (newValue: number) => void;
     selectAttendance: (value: SelectChangeEvent<number>) => void;
     selectSubject: (value: SelectChangeEvent<string>) => void;
 };

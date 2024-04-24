@@ -8,5 +8,6 @@
     "labels.addUser": "Adauga utilizator",
     "labels.addUserFile": "Adauga fisier",
     "labels.addSubject": "Adauga materie",
-    "labels.addAssignment": "Adauga proiect"
+    "labels.addAssignment": "Adauga proiect",
+    "labels.addSolution": "Adauga solutie"
 }

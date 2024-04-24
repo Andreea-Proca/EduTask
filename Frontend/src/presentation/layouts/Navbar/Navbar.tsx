@@ -23,6 +23,8 @@ export const Navbar = () => {
   const { formatMessage } = useIntl();
   const { loggedIn } = useAppSelector(x => x.profileReducer);
   const isAdmin = useOwnUserHasRole(UserRoleEnum.Admin);
+  const isProf = useOwnUserHasRole(UserRoleEnum.Professor);
+  const isStudent = useOwnUserHasRole(UserRoleEnum.Student);
   const dispatch = useAppDispatch();
   const { redirectToHome } = useAppRouter();
   const logout = useCallback(() => {
@@ -179,7 +181,92 @@ export const Navbar = () => {
                   </Link>
                 </Button>
               </Grid>
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.FeedbackList}>
+                    {formatMessage({ id: "globals.feedbackList" })}
+                  </Link>
+                </Button>
+              </Grid>
             </Grid>}
+
+
+            {isProf && <Grid // If the user is logged in and it is an admin they can have new menu items shown.
+              container
+              item
+              direction="row"
+              xs={12}
+              alignItems="center"
+              wrap="nowrap"
+              columnSpacing={15}
+            >
+
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.UserFiles}>
+                    {formatMessage({ id: "globals.files" })}
+                  </Link>
+                </Button>
+              </Grid>
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.Subjects}>
+                    {formatMessage({ id: "globals.subjects" })}
+                  </Link>
+                </Button>
+              </Grid>
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.Assignments}>
+                    {formatMessage({ id: "globals.assignments" })}
+                  </Link>
+                </Button>
+              </Grid>
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.FeedbackList}>
+                    {formatMessage({ id: "globals.feedbackList" })}
+                  </Link>
+                </Button>
+              </Grid>
+            </Grid>}
+
+            {isStudent && <Grid // If the user is logged in and it is an admin they can have new menu items shown.
+              container
+              item
+              direction="row"
+              xs={12}
+              alignItems="center"
+              wrap="nowrap"
+              columnSpacing={15}
+            >
+
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.Subjects}>
+                    {formatMessage({ id: "globals.subjects" })}
+                  </Link>
+                </Button>
+              </Grid>
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.Assignments}>
+                    {formatMessage({ id: "globals.assignments" })}
+                  </Link>
+                </Button>
+              </Grid>
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.Feedback}>
+                    {formatMessage({ id: "globals.feedback" })}
+                  </Link>
+                </Button>
+              </Grid>
+            </Grid>}
+            
+
+
+
           </Grid>
           <Grid container item direction="column" xs={1}>
             <NavbarLanguageSelector />

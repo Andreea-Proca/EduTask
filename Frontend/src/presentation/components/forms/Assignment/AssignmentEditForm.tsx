@@ -18,18 +18,12 @@ import { isEmpty, isUndefined } from "lodash";
 import { AmountEnum } from "@infrastructure/apis/client";
 import "presentation/assets/lang";
 import { ContentCard } from "@presentation/components/ui/ContentCard";
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-import { useRadioGroup } from '@mui/material/RadioGroup';
-import { useAssignmentApi } from "@infrastructure/apis/api-management/assignment";
-import { useEffect, useState } from "react";
 import { useSubjectController } from "./Subject.controller";
-import { is } from "@infrastructure/utils/typeUtils";
 
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-//import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs, { Dayjs } from 'dayjs';
+import { DateTimePicker } from "@mui/x-date-pickers";
 
 
 /**
@@ -46,6 +40,18 @@ export const AssignmentEditForm = (props: { onSubmit?: () => void; id: string}) 
 
     console.log("id: ", props.id);
     console.log("onSubmit: ", props.onSubmit);
+
+    const [value, setValue] = React.useState<Dayjs | null>(
+        dayjs(Date.now()),
+      );
+    
+      const handleChange = (newValue: Dayjs | null) => {
+        console.log("newValue: ", newValue);
+        setValue(newValue);
+        if(newValue !== null && newValue !== undefined)
+            actions.selectDate(newValue.toDate());
+      };
+
 
     return <form onSubmit={actions.handleSubmit(actions.update)}> {/* Wrap your form into a form tag and use the handle submit callback to validate the form and call the data submission. */}
         <Stack spacing={4} style={{ width: "100%" }}>
@@ -189,20 +195,11 @@ export const AssignmentEditForm = (props: { onSubmit?: () => void; id: string}) 
                                 <FormattedMessage id="globals.dueDate" />
                             </FormLabel>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                {/* <DemoContainer components={['DatePicker']}> */}
-                                    <DatePicker
-                                        label="Controlled picker"
-                                        {...actions.register("dueDate")}
-                                        value={actions.watch("dueDate")}
-                                        onChange={(event) => {
-                                            if (event) {
-                                                actions.selectDate;
-                                                actions.register("dueDate"); // This is needed to trigger the validation on the datepicke
-                                            }
-                                        }}
+                                    <DateTimePicker
+                                        value={value}
+                                        onChange={handleChange}
                                         renderInput={(params) => <TextField {...params} />}
                                     />
-                                  {/* </DemoContainer> */}
                                 </LocalizationProvider>
                             <FormHelperText
                                 hidden={isUndefined(state.errors.dueDate)}

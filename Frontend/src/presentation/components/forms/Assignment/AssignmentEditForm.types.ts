@@ -28,7 +28,7 @@ export type AssignmentEditFormActions = {
     //submit: (body: AssignmentEditFormModel) => void;
     update: (body: AssignmentEditFormModel) => void;
     selectSubject: (value: SelectChangeEvent<string>) => void;
-    selectDate: (value: SelectChangeEvent<Date>) => void;
+    selectDate: (value: Date) => void;
 };
 export type AssignmentEditFormComputed = {
     defaultValues: AssignmentEditFormModel,

@@ -26,7 +26,7 @@ export type AssignmentAddFormActions = {
     handleSubmit: UseFormHandleSubmit<AssignmentAddFormModel>;
     submit: (body: AssignmentAddFormModel) => void;
     selectSubject: (value: SelectChangeEvent<string>) => void;
-    selectDate: (value: SelectChangeEvent<Date>) => void;
+    selectDate: (value: Date) => void;
 };
 export type AssignmentAddFormComputed = {
     defaultValues: AssignmentAddFormModel,

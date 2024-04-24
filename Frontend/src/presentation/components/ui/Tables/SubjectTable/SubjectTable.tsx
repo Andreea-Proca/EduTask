@@ -3,13 +3,14 @@ import { isUndefined } from "lodash";
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField } from "@mui/material";
 import { DataLoadingContainer } from "../../LoadingDisplay";
 import { useSubjectTableController } from "./SubjectTable.controller";
-import { SubjectDTO } from "@infrastructure/apis/client";
+import { SubjectDTO, UserRoleEnum } from "@infrastructure/apis/client";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SubjectAddDialog } from "../../Dialogs/SubjectAddDialog";
 import { SubjectEditDialog } from "../../Dialogs/SubjectEditDialog";
 import { useAppSelector } from "@application/store";
 import { useState } from "react";
 import { dateToDateStringOrNull } from "@infrastructure/utils/dateUtils";
+import { useOwnUserHasRole } from "@infrastructure/hooks/useOwnUser";
 
 /**
  * This hook returns a header for the table with translated columns.
@@ -55,8 +56,12 @@ export const SubjectTable = () => {
 
     const [searchText, setSearchText] = useState('');
 
+    const isAdmin = useOwnUserHasRole(UserRoleEnum.Admin);
+    const isProf = useOwnUserHasRole(UserRoleEnum.Professor);
+    const isStudent = useOwnUserHasRole(UserRoleEnum.Student);
+
     return <DataLoadingContainer isError={isError} isLoading={isLoading} tryReload={tryReload}> {/* Wrap the table into the loading container because data will be fetched from the backend and is not immediately available.*/}
-        <SubjectAddDialog /> {/* Add the button to open the user add modal. */}
+        {!isStudent && <SubjectAddDialog /> }
         
         <br />
         <div  style={{ display: 'flex', alignItems: 'center' }}>

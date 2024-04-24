@@ -30,7 +30,12 @@ import { useRadioGroup } from '@mui/material/RadioGroup';
 import { useSubjectApi } from "@infrastructure/apis/api-management/subject";
 import { useEffect, useState } from "react";
 import { useSubjectController } from "./Subject.controller";
-import { is } from "@infrastructure/utils/typeUtils";
+import { IconContainerProps } from '@mui/material/Rating';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 
 /**
  * Here we declare the user add form component.
@@ -98,6 +103,46 @@ export const FeedbackForm = (props: { onSubmit?: () => void }) => {
             label: '100%',
         },
     ];
+
+    const StyledRating = styled(Rating)(({ theme }) => ({
+        '& .MuiRating-iconEmpty .MuiSvgIcon-root': {
+          color: theme.palette.action.disabled,
+        },
+      }));
+      
+      const customIcons: {
+        [index: string]: {
+          icon: React.ReactElement;
+          label: string;
+        };
+      } = {
+        1: {
+          icon: <SentimentVeryDissatisfiedIcon color="error" style={{ fontSize: 40 }}/>,
+          label: 'Very Dissatisfied',
+        },
+        2: {
+          icon: <SentimentDissatisfiedIcon color="error" style={{ fontSize: 40 }}/>,
+          label: 'Dissatisfied',
+        },
+        3: {
+          icon: <SentimentSatisfiedIcon color="warning" style={{ fontSize: 40 }}/>,
+          label: 'Neutral',
+        },
+        4: {
+          icon: <SentimentSatisfiedAltIcon color="success" style={{ fontSize: 40 }}/>,
+          label: 'Satisfied',
+        },
+        5: {
+          icon: <SentimentVerySatisfiedIcon color="success" style={{ fontSize: 40 }}/>,
+          label: 'Very Satisfied',
+        },
+      };
+      
+      function IconContainer(props: IconContainerProps) {
+        const { value, ...other } = props;
+        return <span {...other}>{customIcons[value].icon}</span>;
+      }
+      
 
     return <form onSubmit={actions.handleSubmit(actions.submit)}> {/* Wrap your form into a form tag and use the handle submit callback to validate the form and call the data submission. */}
         <Stack spacing={4} style={{ width: "100%" }}>
@@ -202,23 +247,26 @@ export const FeedbackForm = (props: { onSubmit?: () => void }) => {
                             sx={{ paddingRight: '32px' }}
                             fullWidth
                             error={!isUndefined(state.errors.rating)}
-                        > {/* Wrap the input into a form control and use the errors to show the input invalid if needed. */}
+                        >
                             <FormLabel required>
                                 <FormattedMessage id="globals.rating" />
-                            </FormLabel> {/* Add a form label to indicate what the input means. */}
+                            </FormLabel> 
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Rating
-                                    {...actions.register("rating")}
-                                    value={actions.watch("rating")}
-                                    onChange={(event) => {
-                                        actions.selectRating;
-                                        actions.register("rating").onChange(event);
-                                    }}  // Selects may need a listener to for the variable change.}
-                                    name="simple-controlled"
-                                    defaultValue={3}
-                                    style={{ fontSize: 40 }}
-                                    max={5}
-                                />
+                               
+                            <StyledRating
+                            name="highlight-selected-only"
+                            //defaultValue={2}
+                            IconContainerComponent={IconContainer}
+                            getLabelText={(value: number) => customIcons[value].label}
+                            highlightSelectedOnly
+                            value = {actions.watch("rating")}
+                            onChange={(event, newValue) => {
+                                if (newValue != null)
+                                actions.selectRating(newValue);
+                                //actions.register("rating").onChange(event);
+                                console.log(newValue);
+                              }}
+                            />
                             </div>
                             <FormHelperText
                                 hidden={isUndefined(state.errors.rating)}

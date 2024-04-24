@@ -122,13 +122,12 @@ export const useAssignmentAddFormController = (onSubmit?: () => void, dueDate?: 
         });
     }, [setValue]);
 
-    const selectDate = useCallback((event: SelectChangeEvent<Date>) => { // Select inputs are tricky and may need their on callbacks to set the values.
-       // Date dateString = new Date(event.target.value);
-        console.log("event.target.value: ", event.target.value);
-        setValue("dueDate", event.target.value as Date, {
-            shouldValidate: true,
-        });
-    }, [setValue]);
+    const selectDate = useCallback((value: Date) => { // Select inputs are tricky and may need their on callbacks to set the values.
+        console.log("event.target.value: ", value);
+         setValue("dueDate", value as Date, {
+             shouldValidate: true,
+         });
+     }, [setValue]);
 
     // useEffect(() => {
     //     console.log("idddd: ", dueDate);
